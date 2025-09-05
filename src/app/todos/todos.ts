@@ -2,12 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Todo } from '../models/todo.type';
 import { TodosService } from '../services/todosService';
 import { catchError } from 'rxjs';
-import { TodoItem } from '../components/todo-item/todo-item';
+import { TodoItemcomponent } from '../components/todo-item/todo-item';
 
 
 @Component({
   selector: 'app-todos',
-  imports: [TodoItem],
+  imports: [TodoItemcomponent],
   templateUrl: './todos.html',
   styleUrl: './todos.css'
 })
@@ -30,7 +30,17 @@ export class Todos implements OnInit {
     });
   }
   updateTodoItem(todoItem: Todo){
-    
+    this.todoItems.update((todos) => {
+      return todos.map((todo) => {
+        if (todo.id === todoItem.id) {
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        }
+        return todo;
+      });
+    });
   }
 
 }

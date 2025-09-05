@@ -9,10 +9,11 @@ import { Counter } from '../components/counter/counter';
   styleUrl: './home.css'
 })
 export class Home {
-  homeMessage = signal('Hello, World!');
+  homeMessage = signal('dlroW olleH!');
+  lastKey = ('');
 
   keyUpHandler (event : KeyboardEvent) {
-    console.log(`user pressed the ${event.key} key`);
-    console.log('User pressed the ' + event.key + ' key');
+    this.lastKey = event.key;
   }
 }
+
