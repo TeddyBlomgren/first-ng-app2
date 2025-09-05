@@ -1,1 +1,12 @@
-<p>spel works!</p>
+<h1>Spel</h1>
+
+<div class="tiles">
+  <a class="tile" routerLink="/spel/sudoku" routerLinkActive="active">Sudoku</a>
+  <a class="tile" routerLink="/spel/tic-tac-toe" routerLinkActive="active">Tic-Tac-Toe</a>
+  <a class="tile" routerLink="/spel/four-in-a-row" routerLinkActive="active">Four-in-a-row</a>
+  <a class="tile" routerLink="/spel/snake" routerLinkActive="active">Snake</a>
+</div>
+
+<div class="game">
+  <router-outlet></router-outlet>
+</div>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-spel',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './spel.html',
-  styleUrl: './spel.css'
+  styleUrls: ['./spel.css']
 })
-export class Spel {
-
-}
+export class SpelComponent {}

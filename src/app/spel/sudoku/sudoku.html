@@ -1,1 +1,48 @@
-<p>sudoku works!</p>
+<div class="sudoku-card">
+  <form class="toolbar" (ngSubmit)="load()">
+    <label class="control">
+      <span>Svårighetsgrad</span>
+      <select [(ngModel)]="selectedDifficulty" name="difficulty">
+        <option *ngFor="let d of difficulties" [value]="d">{{ d | titlecase }}</option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Hämtar…' : 'Hämta Sudoku' }}
+    </button>
+  </form>
+
+  <div class="meta" *ngIf="sudoku">
+    <span>Difficulty:</span>
+    <strong>{{ sudoku.difficulty ?? selectedDifficulty | titlecase }}</strong>
+  </div>
+
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <div class="board-wrap" *ngIf="sudoku as s">
+    <table class="sudoku" aria-label="Sudokobräde">
+      <tbody>
+        <tr *ngFor="let row of s.grid; let r = index; trackBy: trackRow">
+          <td *ngFor="let cell of row; let c = index; trackBy: trackCol">
+            <!-- Given = låst -->
+            <span class="cell given" *ngIf="givenMask[r][c]">{{ cell }}</span>
+
+            <!-- Tom = input -->
+            <input
+              *ngIf="!givenMask[r][c]"
+              class="cell editable"
+              type="text"
+              maxlength="1"
+              inputmode="numeric"
+              autocomplete="off"
+              [value]="cellText(cell)"
+              (input)="onCellInput(r, c, $any($event.target).value)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mistakes" *ngIf="mistakes > 0">Fel: {{ mistakes }}</p>
+</div>

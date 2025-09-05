@@ -1,4 +1,5 @@
 export interface Sudoku {
-    difficulty: string;
+    difficulty?: string;
     grid: number[][];
+    solution?: number[][]; 
 }
