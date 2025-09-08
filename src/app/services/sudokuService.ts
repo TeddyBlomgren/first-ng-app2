@@ -3,15 +3,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Sudoku } from "../models/sudoku.model";
 
-@Injectable({providedIn: 'root'})
-
-/*export class SudokuService {
-    private http = inject(HttpClient);
-    private apiKey = 'p2hwyeiZo4uM2Lfa0A26/Q==Yxfpem66xxm7L8T9';
-    private baseUrl = 'https://api.api-ninjas.com/v1/sudokugenerate';
-
-}
-    */
 @Injectable({ providedIn: 'root' })
 export class SudokuService {
   private apiUrl = 'https://api.api-ninjas.com/v1/sudokugenerate';
