@@ -106,7 +106,6 @@ button[disabled] {
 
 /* Tjockare linjer mellan 3x3-block */
 .sudoku td.block-right { border-right: 2px solid #222; }
-.sudoku tr:nth-child(3n) td:not(:last-child) {}
 .sudoku td.block-bottom { border-bottom: 2px solid #222; }
 
 /* Fyllda/”given” rutor */

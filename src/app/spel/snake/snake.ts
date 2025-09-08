@@ -1,151 +1,158 @@
-//app.component.ts
-
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './snake.html',
-  styleUrl: './snake.css',
+  styleUrls: ['./snake.css'],
 })
 export class AppComponent {
-  score: number = 0;
+  score = 0;
 
-  @ViewChild('screen', { static: false })
-  canvas!: ElementRef;
+  @ViewChild('screen', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
   ngAfterViewInit() {
-    let ctx = this.canvas.nativeElement.getContext('2d');
+    const canvas = this.canvas.nativeElement;
 
-    let gameOver: boolean = false;
+    const cssW = canvas.clientWidth;
+    const cssH = canvas.clientHeight;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const CELL = 20;
+    const COLS = Math.floor(cssW / CELL);
+    const ROWS = Math.floor(cssH / CELL);
+
+    let gameOver = false;
+    let speed = 250;
+    this.score = 0;
 
     let snake = [
-      { x: 20 * 4, y: 0 },
-      { x: 20 * 3, y: 0 },
-      { x: 20 * 2, y: 0 },
-      { x: 20, y: 0 },
-      { x: 0, y: 0 },
+      { x: CELL * 4, y: 0 },
+      { x: CELL * 3, y: 0 },
+      { x: CELL * 2, y: 0 },
+      { x: CELL * 1, y: 0 },
+      { x: CELL * 0, y: 0 },
     ];
 
-    let xVelocity: number = 20;
-    let yVelocity: number = 0;
+    let xVelocity = CELL;
+    let yVelocity = 0;
 
-    let foodX: number;
-    let foodY: number;
+    let foodX = 0;
+    let foodY = 0;
 
-    let speed: number = 250;
-    this.score = 0;
-    const self = this;
+    const createFood = () => {
+      do {
+        foodX = Math.floor(Math.random() * COLS) * CELL;
+        foodY = Math.floor(Math.random() * ROWS) * CELL;
+      } while (snake.some((p) => p.x === foodX && p.y === foodY));
+    };
 
-    function checkGameOver() {
-      if (snake[0].x < 0) {
+    const drawSnake = () => {
+      ctx.fillStyle = 'black';
+      for (const p of snake) ctx.fillRect(p.x, p.y, CELL, CELL);
+    };
+
+    const drawFood = () => {
+      ctx.fillStyle = 'red';
+      ctx.fillRect(foodX, foodY, CELL, CELL);
+    };
+
+    const checkGameOver = () => {
+      const head = snake[0];
+      if (head.x < 0 || head.x >= cssW || head.y < 0 || head.y >= cssH) {
         gameOver = true;
-      } else if (snake[0].x >= 280) {
-        gameOver = true;
-      } else if (snake[0].y < 0) {
-        gameOver = true;
-      } else if (snake[0].y >= 140) {
-        gameOver = true;
+        return;
       }
-      for (let i = 1; i < snake.length; i += 1) {
-        if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
           gameOver = true;
+          return;
         }
       }
-    }
+    };
 
-    function createFood() {
-      do {
-        foodX = Math.floor(Math.random() * 13 + 1) * 20;
-        foodY = Math.floor(Math.random() * 13 + 1) * 10;
-      } while (snake.some((part) => part.x == foodX && part.y == foodY));
-    }
-
-    function drawSnake() {
-      ctx.fillStyle = 'black';
-      snake.forEach((snakePart) => {
-        ctx.fillRect(snakePart.x, snakePart.y, 20, 10);
-      });
-    }
-    function drawFood() {
-      ctx.fillStyle = 'red';
-      ctx.beginPath();
-      ctx.fillRect(foodX, foodY, 20, 10);
-    }
-
-    function moveSnake() {
-      const head = {
-        x: snake[0].x + xVelocity,
-        y: snake[0].y + yVelocity,
-      };
+    const moveSnake = () => {
+      const head = { x: snake[0].x + xVelocity, y: snake[0].y + yVelocity };
       snake.unshift(head);
-    }
+    };
 
-    function changeDirection(event: any) {
-      const keyPressed = event.keyCode;
+    const changeDirection = (e: KeyboardEvent) => {
+      const LEFT = 37,
+        UP = 38,
+        RIGHT = 39,
+        DOWN = 40;
+      const goingUp = yVelocity === -CELL;
+      const goingDown = yVelocity === CELL;
+      const goingRight = xVelocity === CELL;
+      const goingLeft = xVelocity === -CELL;
 
-      const LEFT = 37;
-      const UP = 38;
-      const RIGHT = 39;
-      const DOWN = 40;
-
-      const goingUp = yVelocity == -10;
-      const goingDown = yVelocity == 10;
-      const goingRight = xVelocity == 20;
-      const goingLeft = xVelocity == -20;
-
-      if (keyPressed == LEFT && !goingRight) {
-        xVelocity = -20;
-        yVelocity = 0;
-      } else if (keyPressed == UP && !goingDown) {
-        xVelocity = 0;
-        yVelocity = -10;
-      } else if (keyPressed == RIGHT && !goingLeft) {
-        xVelocity = 20;
-        yVelocity = 0;
-      } else if (keyPressed == DOWN && !goingUp) {
-        xVelocity = 0;
-        yVelocity = 10;
+      switch (e.keyCode) {
+        case LEFT:
+          if (!goingRight) {
+            xVelocity = -CELL;
+            yVelocity = 0;
+          }
+          break;
+        case RIGHT:
+          if (!goingLeft) {
+            xVelocity = CELL;
+            yVelocity = 0;
+          }
+          break;
+        case UP:
+          if (!goingDown) {
+            xVelocity = 0;
+            yVelocity = -CELL;
+          }
+          break;
+        case DOWN:
+          if (!goingUp) {
+            xVelocity = 0;
+            yVelocity = CELL;
+          }
+          break;
       }
-    }
-    createFood();
-    window.addEventListener('keydown', changeDirection);
+    };
 
-    function gameLoop() {
+    window.addEventListener('keydown', changeDirection);
+    createFood();
+
+    const loop = () => {
       if (gameOver) {
         if (confirm('Game Over!')) location.reload();
         return;
       }
 
       checkGameOver();
-
+      ctx.clearRect(0, 0, cssW, cssH);
       ctx.fillStyle = 'lightgray';
-      ctx.fillRect(0, 0, 400, 400);
+      ctx.fillRect(0, 0, cssW, cssH);
 
       drawFood();
       moveSnake();
 
       if (snake[0].x === foodX && snake[0].y === foodY) {
-        self.score++;
+        this.score++;
         createFood();
-
-        if (self.score > 5) speed = 225;
-        if (self.score > 10) speed = 200;
-        if (self.score > 15) speed = 175;
-        if (self.score > 20) speed = 150;
-        if (self.score > 30) speed = 125;
-        if (self.score > 40) speed = 100;
+        if (this.score > 5) speed = 225;
+        if (this.score > 10) speed = 200;
+        if (this.score > 15) speed = 175;
+        if (this.score > 20) speed = 150;
+        if (this.score > 30) speed = 125;
+        if (this.score > 40) speed = 100;
       } else {
         snake.pop();
       }
 
       drawSnake();
+      setTimeout(loop, speed);
+    };
 
-      setTimeout(gameLoop, speed);
-    }
-
-    gameLoop();
+    loop();
   }
 }

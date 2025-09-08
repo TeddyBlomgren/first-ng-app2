@@ -25,7 +25,8 @@ export const routes: Routes = [
       },
       {
         path: 'tic-tac-toe',
-        loadComponent: () => import('./spel/tic-tac-toe/tic-tac-toe').then((c) => c.TicTacToe),
+        loadComponent: () =>
+          import('./spel/tic-tac-toe/tic-tac-toe').then((c) => c.TicTacToeComponent),
       },
       {
         path: 'four-in-a-row',

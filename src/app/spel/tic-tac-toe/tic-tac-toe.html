@@ -1,1 +1,21 @@
-<p>tic-tac-toe works!</p>
+<div id="container">
+  <h1>Tic-Tac-Toe</h1>
+  <table class="tic-tac-toe" aria-label="Tic-Tac-Toe board">
+    <tbody>
+      <tr *ngFor="let row of game.board; let r = index">
+        <td *ngFor="let cell of row; let c = index" (click)="play(r, c)">
+          {{ cell }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="status">
+    <p *ngIf="game.winner; else nextTurn">
+      {{ game.winner === 'draw' ? 'Oavgjort!' : 'Spelare ' + game.winner + ' vinner!' }}
+    </p>
+    <ng-template #nextTurn>
+      <p>Nästa tur: Spelare {{ game.currentPlayer }}</p>
+    </ng-template>
+    <button (click)="reset()">Starta om spel</button>
+  </div>
