@@ -24,10 +24,10 @@
       <tbody>
         <tr *ngFor="let row of s.grid; let r = index; trackBy: trackRow">
           <td *ngFor="let cell of row; let c = index; trackBy: trackCol">
-            <!-- Given = låst -->
+
             <span class="cell given" *ngIf="givenMask[r][c]">{{ cell }}</span>
 
-            <!-- Tom = input -->
+           
             <input
               *ngIf="!givenMask[r][c]"
               class="cell editable"

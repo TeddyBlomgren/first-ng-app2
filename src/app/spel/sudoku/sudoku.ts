@@ -11,13 +11,13 @@ type Difficulty = 'easy' | 'medium' | 'hard' | 'random';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './sudoku.html',
-  styleUrls: ['./sudoku.css']
+  styleUrls: ['./sudoku.css'],
 })
 export class SudokuComponent {
   difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'random'];
   selectedDifficulty: Difficulty = 'easy';
 
-  sudoku?: Sudoku;             
+  sudoku?: Sudoku;
   givenMask: boolean[][] = [];
   mistakes = 0;
 
@@ -33,7 +33,7 @@ export class SudokuComponent {
   }
 
   private buildGivenMask(grid: number[][]) {
-    this.givenMask = grid.map(row => row.map(v => v !== 0));
+    this.givenMask = grid.map((row) => row.map((v) => v !== 0));
   }
 
   load(): void {
@@ -59,15 +59,14 @@ export class SudokuComponent {
           return;
         }
 
-        // null -> 0 för tomma rutor
-        const grid: number[][] = (puzzle as (number | null)[][]).map(row =>
-          row.map(v => (v == null ? 0 : v))
+        const grid: number[][] = (puzzle as (number | null)[][]).map((row) =>
+          row.map((v) => (v == null ? 0 : v))
         );
 
         this.sudoku = {
           grid,
           solution,
-          difficulty: diff        // <-- sätt difficulty så den visas
+          difficulty: diff,
         };
 
         this.buildGivenMask(grid);
@@ -78,7 +77,7 @@ export class SudokuComponent {
         console.error('Kunde inte hämta Sudoku:', err);
         this.error = 'Kunde inte hämta Sudoku.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -89,9 +88,10 @@ export class SudokuComponent {
 
   onCellInput(r: number, c: number, raw: string) {
     if (!this.sudoku) return;
-    if (this.givenMask[r][c]) return; // låst
+    if (this.givenMask[r][c]) return;
 
     const trimmed = raw.trim();
+
     // Tillåt tomt (=0) eller ett tecken 1–9
     if (trimmed === '') {
       this.sudoku.grid[r][c] = 0;
@@ -109,7 +109,6 @@ export class SudokuComponent {
     }
   }
 
-  // trackBy
   trackRow = (_: number, __: number[]) => _;
   trackCol = (_: number, __: number) => _;
 }

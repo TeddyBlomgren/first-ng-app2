@@ -35,6 +35,10 @@ export class AppComponent {
     let foodX: number;
     let foodY: number;
 
+    let speed: number = 250;
+    this.score = 0;
+    const self = this;
+
     function checkGameOver() {
       if (snake[0].x < 0) {
         gameOver = true;
@@ -107,26 +111,41 @@ export class AppComponent {
       }
     }
     createFood();
-    let id = setInterval(() => {
-      if (!gameOver) {
-        window.addEventListener('keydown', changeDirection);
-        checkGameOver();
-        ctx.fillStyle = 'lightgray';
-        ctx.fillRect(0, 0, 400, 400);
-        drawFood();
-        moveSnake();
-        drawSnake();
-        if (snake[0].x == foodX && snake[0].y == foodY) {
-          this.score++;
-          createFood();
-        } else {
-          snake.pop();
-        }
-      } else {
-        var answer = confirm('Game Over!');
-        if (answer) location.reload();
-        clearInterval(id);
+    window.addEventListener('keydown', changeDirection);
+
+    function gameLoop() {
+      if (gameOver) {
+        if (confirm('Game Over!')) location.reload();
+        return;
       }
-    }, 250);
+
+      checkGameOver();
+
+      ctx.fillStyle = 'lightgray';
+      ctx.fillRect(0, 0, 400, 400);
+
+      drawFood();
+      moveSnake();
+
+      if (snake[0].x === foodX && snake[0].y === foodY) {
+        self.score++;
+        createFood();
+
+        if (self.score > 5) speed = 225;
+        if (self.score > 10) speed = 200;
+        if (self.score > 15) speed = 175;
+        if (self.score > 20) speed = 150;
+        if (self.score > 30) speed = 125;
+        if (self.score > 40) speed = 100;
+      } else {
+        snake.pop();
+      }
+
+      drawSnake();
+
+      setTimeout(gameLoop, speed);
+    }
+
+    gameLoop();
   }
 }
