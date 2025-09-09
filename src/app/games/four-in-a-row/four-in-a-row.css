@@ -1,0 +1,17 @@
+.four-in-a-row { border-collapse: collapse; margin: 12px 0; }
+.four-in-a-row th, .four-in-a-row td { width: 48px; height: 48px; text-align: center; }
+.four-in-a-row td { background: #e9f0f7; border: 1px solid #cdd6e0; cursor: pointer; }
+.four-in-a-row th button { cursor: pointer; }
+
+.disc {
+  display: inline-block;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: transparent;
+}
+td.r .disc { background: #d33; } /* Röd spelare */
+td.y .disc { background: #fc3; } /* Gul spelare */
+.status {
+  margin-top: 12px;
+  font-weight: 600;
+}

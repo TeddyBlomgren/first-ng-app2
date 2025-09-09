@@ -31,7 +31,7 @@ export const routes: Routes = [
       {
         path: 'four-in-a-row',
         loadComponent: () =>
-          import('./games/four-in-a-row/four-in-a-row').then((c) => c.FourInARow),
+          import('./games/four-in-a-row/four-in-a-row').then((c) => c.FourInARowModel),
       },
       {
         path: 'snake',
