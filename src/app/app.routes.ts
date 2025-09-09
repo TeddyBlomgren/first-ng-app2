@@ -17,31 +17,32 @@ export const routes: Routes = [
 
   {
     path: 'spel',
-    loadComponent: () => import('./spel/spel').then((c) => c.SpelComponent),
+    loadComponent: () => import('./games/games').then((c) => c.SpelComponent),
     children: [
       {
         path: 'sudoku',
-        loadComponent: () => import('./spel/sudoku/sudoku').then((c) => c.SudokuComponent),
+        loadComponent: () => import('./games/sudoku/sudoku').then((c) => c.SudokuComponent),
       },
       {
         path: 'tic-tac-toe',
         loadComponent: () =>
-          import('./spel/tic-tac-toe/tic-tac-toe').then((c) => c.TicTacToeComponent),
+          import('./games/tic-tac-toe/tic-tac-toe').then((c) => c.TicTacToeComponent),
       },
       {
         path: 'four-in-a-row',
-        loadComponent: () => import('./spel/four-in-a-row/four-in-a-row').then((c) => c.FourInARow),
+        loadComponent: () =>
+          import('./games/four-in-a-row/four-in-a-row').then((c) => c.FourInARow),
       },
       {
         path: 'snake',
-        loadComponent: () => import('./spel/snake/snake').then((c) => c.AppComponent),
+        loadComponent: () => import('./games/snake/snake').then((c) => c.AppComponent),
       },
     ],
   },
   {
     path: 'Väder',
     loadComponent: () => {
-      return import('./vader/vader').then((c) => c.Vader);
+      return import('./weather/weather').then((c) => c.Vader);
     },
   },
   {

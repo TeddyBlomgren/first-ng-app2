@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SpelComponent } from './spel';
+import { Vader } from './weather';
 
-describe('Spel', () => {
-  let component: SpelComponent;
-  let fixture: ComponentFixture<SpelComponent>;
+describe('Vader', () => {
+  let component: Vader;
+  let fixture: ComponentFixture<Vader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SpelComponent]
-    })
-    .compileComponents();
+      imports: [Vader],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(SpelComponent);
+    fixture = TestBed.createComponent(Vader);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

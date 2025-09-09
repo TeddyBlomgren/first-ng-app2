@@ -59,7 +59,7 @@ export class TicTacToeService {
   }
 
   playMove(row: number, col: number): boolean {
-    // 1. Kolla om rutan är tom och spelet inte är slut
+    // Kolla om rutan är tom och spelet inte är slut
     if (this.game.board[row][col] === null && !this.game.winner) {
       this.game.board[row][col] = this.game.currentPlayer;
 

@@ -1,8 +1,5 @@
 import { inject, Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Vader } from '../vader/vader';
 
 @Injectable({ providedIn: 'root' })
 export class VaderService {

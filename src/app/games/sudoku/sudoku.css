@@ -89,7 +89,7 @@ button[disabled] {
 /* --- Själva brädet --- */
 .sudoku {
   border-collapse: collapse;
-  border: 2px solid #222;
+  border: 3px solid #222;  
   background: #fff;
   user-select: none;
 }
@@ -97,18 +97,28 @@ button[disabled] {
 .sudoku td {
   width: 48px;
   height: 48px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid #cfcfcf; 
   text-align: center;
   vertical-align: middle;
   position: relative;
   padding: 0;
 }
 
-/* Tjockare linjer mellan 3x3-block */
-.sudoku td.block-right { border-right: 2px solid #222; }
-.sudoku td.block-bottom { border-bottom: 2px solid #222; }
+/* --- Tjockare linjer för 3x3-block --- */
+.sudoku td:nth-child(3n) {
+  border-right: 3px solid #222;
+}
+.sudoku tr:nth-child(3n) td {
+  border-bottom: 3px solid #222;
+}
 
-/* Fyllda/”given” rutor */
+/* --- Ytterram (extra säkerhet) --- */
+.sudoku tr:first-child td { border-top: 3px solid #222; }
+.sudoku td:first-child    { border-left: 3px solid #222; }
+.sudoku tr:last-child td  { border-bottom: 3px solid #222; }
+.sudoku td:last-child     { border-right: 3px solid #222; }
+
+/* --- Fyllda/”given” rutor --- */
 .given {
   display: grid;
   place-items: center;
@@ -117,10 +127,10 @@ button[disabled] {
   font-weight: 700;
   font-size: 18px;
   color: #222;
-  background: #f8f8f8; /* subtil skillnad */
+  background: #f8f8f8; 
 }
 
-/* Inputs i tomma rutor */
+/* --- Inputs i tomma rutor --- */
 .sudoku input {
   width: 100%;
   height: 100%;
@@ -142,7 +152,7 @@ button[disabled] {
   border-radius: 2px;
 }
 
-/* Små skärmar */
+/* --- Små skärmar --- */
 @media (max-width: 480px) {
   .sudoku td { width: 40px; height: 40px; }
   .given, .sudoku input { font-size: 16px; }

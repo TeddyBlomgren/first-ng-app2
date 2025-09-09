@@ -11,6 +11,12 @@ export class AppComponent {
 
   @ViewChild('screen', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
+  // --- Bryggan: publik metod som kan anropas från templatet ---
+  private startGameFn: (() => void) | null = null;
+  public startGame() {
+    this.startGameFn?.();
+  }
+
   ngAfterViewInit() {
     const canvas = this.canvas.nativeElement;
 
@@ -41,6 +47,8 @@ export class AppComponent {
 
     let xVelocity = CELL;
     let yVelocity = 0;
+    let gamInterval: number | null = null; // du använde både loop + interval; vi låter det vara kvar, men du kan ta bort om du bara kör loop
+    let isGameRunning = false;
 
     let foodX = 0;
     let foodY = 0;
@@ -82,35 +90,31 @@ export class AppComponent {
     };
 
     const changeDirection = (e: KeyboardEvent) => {
-      const LEFT = 37,
-        UP = 38,
-        RIGHT = 39,
-        DOWN = 40;
       const goingUp = yVelocity === -CELL;
       const goingDown = yVelocity === CELL;
       const goingRight = xVelocity === CELL;
       const goingLeft = xVelocity === -CELL;
 
-      switch (e.keyCode) {
-        case LEFT:
+      switch (e.key.toLowerCase()) {
+        case 'a':
           if (!goingRight) {
             xVelocity = -CELL;
             yVelocity = 0;
           }
           break;
-        case RIGHT:
+        case 'd':
           if (!goingLeft) {
             xVelocity = CELL;
             yVelocity = 0;
           }
           break;
-        case UP:
+        case 'w':
           if (!goingDown) {
             xVelocity = 0;
             yVelocity = -CELL;
           }
           break;
-        case DOWN:
+        case 's':
           if (!goingUp) {
             xVelocity = 0;
             yVelocity = CELL;
@@ -122,8 +126,10 @@ export class AppComponent {
     window.addEventListener('keydown', changeDirection);
     createFood();
 
+    // --- Huvudloopen (startas först när du klickar Start) ---
     const loop = () => {
       if (gameOver) {
+        isGameRunning = false;
         if (confirm('Game Over!')) location.reload();
         return;
       }
@@ -150,9 +156,28 @@ export class AppComponent {
       }
 
       drawSnake();
-      setTimeout(loop, speed);
+      if (isGameRunning) setTimeout(loop, speed);
     };
 
-    loop();
+    const startGameLocal = () => {
+      if (isGameRunning) return;
+      isGameRunning = true;
+
+      snake = [
+        { x: 80, y: 0 },
+        { x: 60, y: 0 },
+        { x: 40, y: 0 },
+      ];
+      xVelocity = CELL;
+      yVelocity = 0;
+      this.score = 0;
+      gameOver = false;
+      speed = 250;
+
+      loop();
+    };
+
+    // --- Koppla bryggan ---
+    this.startGameFn = startGameLocal;
   }
 }

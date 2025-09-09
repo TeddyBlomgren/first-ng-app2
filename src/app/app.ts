@@ -5,19 +5,20 @@ import { Header } from './components/header/header';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Header],
+  standalone: true,
   template: `
-   <app-header></app-header>
-   <main>
-  <router-outlet></router-outlet>
-   </main>
-   
+    <app-header></app-header>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
   `,
   styles: [
     `
-    main{
-      padding: 16px;
-  }
-    `],
+      main {
+        padding: 16px;
+      }
+    `,
+  ],
 })
 export class App {
   protected readonly title = signal('first-ng-app2');

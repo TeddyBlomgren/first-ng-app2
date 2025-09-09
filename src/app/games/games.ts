@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-spel',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './spel.html',
-  styleUrls: ['./spel.css']
+  templateUrl: './games.html',
+  styleUrls: ['./games.css'],
 })
 export class SpelComponent {}

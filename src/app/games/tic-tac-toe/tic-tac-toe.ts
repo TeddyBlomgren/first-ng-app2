@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tic-tac-toe.html',
-  styleUrl: './tic-tac-toe.css',
+  styleUrls: ['./tic-tac-toe.css'],
 })
 export class TicTacToeComponent {
   game: TicTacToeModel;
@@ -24,9 +24,5 @@ export class TicTacToeComponent {
   reset() {
     this.ticTacToeService.resetGame();
     this.game = this.ticTacToeService.getGame();
-  }
-
-  winner() {
-    this.ticTacToeService.checkWinner();
   }
 }
