@@ -7,4 +7,4 @@ import { Component } from '@angular/core';
   styleUrl: './weather.css',
   standalone: true,
 })
-export class Vader {}
+export class weather {}

@@ -42,7 +42,7 @@ export const routes: Routes = [
   {
     path: 'Väder',
     loadComponent: () => {
-      return import('./weather/weather').then((c) => c.Vader);
+      return import('./weather/weather').then((c) => c.weather);
     },
   },
   {

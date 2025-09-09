@@ -1,10 +1,23 @@
 
 <div id="container">
     <h1>Snake Game</h1>
+ <div class="controls">
+  <p><b>Kontroller:</b></p>
+  <div class="keys">
+    <div class="row">
+      <span class="key">W</span>
+    </div>
+    <div class="row">
+      <span class="key">A</span>
+      <span class="key">S</span>
+      <span class="key">D</span>
+    </div>
+  </div>
+</div>
+
+
     <div>
-        
         <button (click)="startGame()">Start Game</button>
-        
     </div>
     <canvas #screen id="screen"></canvas>
     <h2 id="score">Score: {{ score }}</h2>
