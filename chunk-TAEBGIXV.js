@@ -1,1 +1,0 @@
-import{Fa as a,fb as n,gb as o,sb as r}from"./chunk-7KW2OLVY.js";var i=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=a({type:t,selectors:[["app-weather"]],decls:2,vars:0,template:function(e,p){e&1&&(n(0,"p"),r(1,"vader works!"),o())},encapsulation:2})};export{i as Vader};
