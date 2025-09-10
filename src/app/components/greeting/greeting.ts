@@ -3,9 +3,10 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-greeting',
   imports: [],
+  standalone: true,
   templateUrl: './greeting.html',
-  styleUrl: './greeting.css'
+  styleUrls: ['./greeting.css'],
 })
 export class Greeting {
-  messsage = input('Default Greeting message');
+  message = input('Default Greeting message');
 }

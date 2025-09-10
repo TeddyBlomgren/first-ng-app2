@@ -3,19 +3,20 @@ import { Component, signal } from '@angular/core';
 @Component({
   selector: 'app-counter',
   imports: [],
+  standalone: true,
   templateUrl: './counter.html',
-  styleUrl: './counter.css'
+  styleUrl: './counter.css',
 })
 export class Counter {
   counterValue = signal(0);
-  Increment(){
+
+  Increment() {
     this.counterValue.update((val) => val + 1);
   }
-  Decrement(){
+  Decrement() {
     this.counterValue.update((val) => val - 1);
   }
-  Reset(){
+  Reset() {
     this.counterValue.set(0);
-
   }
 }

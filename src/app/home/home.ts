@@ -1,19 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { Greeting } from '../components/greeting/greeting';
 import { Counter } from '../components/counter/counter';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
-  imports: [Greeting, Counter],
+  imports: [Greeting, Counter, FormsModule],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrls: ['./home.css'],
+  standalone: true,
 })
 export class Home {
-  homeMessage = signal('dlroW olleH!');
-  lastKey = ('');
+  homeMessage = signal('Welcome to the Home Page!');
+  lastKey: string = '';
+  inputValue: string = '';
 
-  keyUpHandler (event : KeyboardEvent) {
+  keyUpHandler(event: KeyboardEvent) {
+    this.inputValue = '';
     this.lastKey = event.key;
   }
 }
-
