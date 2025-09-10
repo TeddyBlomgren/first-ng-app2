@@ -1,4 +1,78 @@
-.cv { max-width: 900px; margin: 24px auto; padding: 24px; background:#fff; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,.06); }
-.cv .links { display:flex; gap:12px; margin:8px 0 16px; }
-.cv .links a { padding:6px 10px; border:1px solid #ddd; border-radius:8px; text-decoration:none; }
-.cv h2 { margin-top:20px; }
+.cv {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 32px 40px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #222;
+  line-height: 1.7;
+}
+
+.cv .links {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0 24px;
+  flex-wrap: wrap;
+}
+
+.cv .links a {
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1976d2;
+  background: #f7fafd;
+  transition: 
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+  font-weight: 500;
+}
+
+.cv .links a:hover,
+.cv .links a:focus {
+  background: #e3f2fd;
+  color: #0d47a1;
+  border-color: #90caf9;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.10);
+  outline: none;
+}
+
+.cv h2 {
+  margin-top: 32px;
+  font-size: 2rem;
+  color: #1565c0;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e3f2fd;
+  padding-bottom: 6px;
+  margin-bottom: 18px;
+}
+
+.cv p, .cv li {
+  font-size: 1.08rem;
+}
+
+.cv ul {
+  margin: 0 0 16px 24px;
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  .cv {
+    padding: 16px 8px;
+  }
+  .cv h2 {
+    font-size: 1.3rem;
+  }
+  .cv .links {
+    gap: 8px;
+  }
+  .cv .links a {
+    padding: 6px 10px;
+    font-size: 0.98rem;
+  }
+}
