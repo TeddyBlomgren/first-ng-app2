@@ -1,0 +1,4 @@
+.cv { max-width: 900px; margin: 24px auto; padding: 24px; background:#fff; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,.06); }
+.cv .links { display:flex; gap:12px; margin:8px 0 16px; }
+.cv .links a { padding:6px 10px; border:1px solid #ddd; border-radius:8px; text-decoration:none; }
+.cv h2 { margin-top:20px; }

@@ -1,7 +1,6 @@
-<div id="container">
+<div class="four-in-a-row-container">
   <h1>Fyra i rad</h1>
 
-  <!-- Klicka på kolumnpilarna för att släppa en bricka -->
   <table class="four-in-a-row" aria-label="Fyra i rad-bräde">
     <thead>
       <tr>
@@ -29,10 +28,9 @@
   </table>
 
   <div class="status" aria-live="polite">
-
-   <p *ngIf="game.winner as w; else noWinner">
-  {{ fourInARowService.playerNames[w] }} vinner! 🎉
-</p>
+    <p *ngIf="game.winner as w; else noWinner">
+      {{ fourInARowService.playerNames[w] }} vinner! 🎉
+    </p>
 
     <ng-template #noWinner>
       <p *ngIf="!isBoardFull(); else draw">

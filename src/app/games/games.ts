@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-spel',
@@ -9,4 +10,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: './games.html',
   styleUrls: ['./games.css'],
 })
-export class SpelComponent {}
+export class SpelComponent {
+  games: any[] = [];
+
+  constructor(private router: Router) {
+    this.games = this.router.config.filter((route) => route.data);
+  }
+}
