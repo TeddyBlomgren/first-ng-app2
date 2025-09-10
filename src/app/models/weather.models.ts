@@ -1,9 +1,8 @@
 export interface Weathermodels {
+  name: string;
   city: string;
-  temperature: number;
-  description: string;
-  minTemperature: number;
-  maxTemperature: number;
-  humidity: number;
-  windSpeed: number;
+  weather: { description: string; icon: string }[];
+  main: { temp: number; temp_min: number; temp_max: number; humidity: number };
+
+  wind: { speed: number };
 }

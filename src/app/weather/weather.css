@@ -1,0 +1,76 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background: linear-gradient(to top, #87ceeb, #ffffff);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.weather-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.weather-container h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.weather-container p {
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #444;
+}
+
+.weather-container small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  width: calc(100% - 24px);
+  outline: none;
+  transition: border 0.2s;
+}
+
+input:focus {
+  border: 1px solid #0077ff;
+}
+
+button {
+  background: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: 8px;
+}
+
+button:hover {
+  background: #005fcc;
+}
+
+.error {
+  margin-top: 12px;
+  color: #b00020;
+  font-weight: bold;
+}

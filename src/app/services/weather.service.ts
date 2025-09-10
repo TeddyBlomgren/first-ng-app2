@@ -13,8 +13,13 @@ export class WeatherService {
 
   constructor(private http: HttpClient) {}
   getWeather(city: string): Observable<Weathermodels> {
-    return this.http.get<Weathermodels>(
-      `${this.apiUrl}/weather?q=${city}&units=metric&appid=${this.headers.get('X-Api-Key')}`
-    );
+    return this.http.get<Weathermodels>(`${this.apiUrl}/weather`, {
+      params: {
+        q: city,
+        appid: environment.weatherapiKey,
+        units: 'metric',
+        lang: 'sv',
+      },
+    });
   }
 }
