@@ -1,0 +1,33 @@
+<div class="minesweeper-controls">
+  <label>
+    Svårighet:
+    <select (change)="setDifficulty($any($event.target).value)">
+      <option [value]="Difficulty.Easy">Easy</option>
+      <option [value]="Difficulty.Medium">Medium</option>
+      <option [value]="Difficulty.Hard">Hard</option>
+    </select>
+  </label>
+  <button (click)="reset()">🔄 Starta om</button>
+</div>
+
+<div class="minesweeper-board">
+  <div class="row" *ngFor="let row of board; let r = index">
+    <button
+      class="cell"
+      *ngFor="let cell of row; let c = index"
+      [class.revealed]="cell.isRevealed"
+      [class.mine]="cell.isRevealed && cell.hasMine"
+      [class.flagged]="cell.isFlagged"
+      (click)="onLeftClick(r, c)"
+      (contextmenu)="onRightClick($event, r, c)"
+      aria-label="Ruta {{ r + 1 }}, {{ c + 1 }}"
+    >
+      <ng-container *ngIf="cell.isRevealed; else hidden">
+        {{ cell.hasMine ? '💣' : cell.adjacentMines || '' }}
+      </ng-container>
+      <ng-template #hidden>
+        {{ cell.isFlagged ? '🚩' : '' }}
+      </ng-template>
+    </button>
+  </div>
+</div>

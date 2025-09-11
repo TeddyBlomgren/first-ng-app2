@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FourInARowModel } from './four-in-a-row';
+import { FourInARowComponent } from './four-in-a-row';
 
 describe('FourInARow', () => {
-  let component: FourInARowModel;
-  let fixture: ComponentFixture<FourInARowModel>;
+  let component: FourInARowComponent;
+  let fixture: ComponentFixture<FourInARowComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FourInARowModel],
+      imports: [FourInARowComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FourInARowModel);
+    fixture = TestBed.createComponent(FourInARowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

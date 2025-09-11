@@ -11,7 +11,7 @@ import { FourInARow as FourInARowstate } from '../../models/four-in-a-row.models
   templateUrl: './four-in-a-row.html',
   styleUrl: './four-in-a-row.css',
 })
-export class FourInARowModel {
+export class FourInARowComponent {
   public four = inject(FourInARowService);
   get game(): FourInARowstate {
     return this.four.game;

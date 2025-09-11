@@ -19,6 +19,7 @@ export const routes: Routes = [
     path: 'spel',
     loadComponent: () => import('./games/games').then((c) => c.SpelComponent),
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'sudoku' },
       {
         path: 'sudoku',
         loadComponent: () => import('./games/sudoku/sudoku').then((c) => c.SudokuComponent),
@@ -31,11 +32,19 @@ export const routes: Routes = [
       {
         path: 'four-in-a-row',
         loadComponent: () =>
-          import('./games/four-in-a-row/four-in-a-row').then((c) => c.FourInARowModel),
+          import('./games/four-in-a-row/four-in-a-row').then((c) => c.FourInARowComponent),
       },
       {
         path: 'snake',
-        loadComponent: () => import('./games/snake/snake').then((c) => c.AppComponent),
+        loadComponent: () => import('./games/snake/snake').then((c) => c.SnakeComponent),
+      },
+      {
+        path: 'memory',
+        loadComponent: () => import('./games/memory/memory').then((c) => c.Memory),
+      },
+      {
+        path: 'minesweeper',
+        loadComponent: () => import('./games/minesweeper/minesweeper').then((c) => c.Minesweeper),
       },
     ],
   },

@@ -1,0 +1,42 @@
+.minesweeper-board {
+  display: inline-block;
+  border: 2px solid #333;
+  background: #eee;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 32px;
+  height: 32px;
+  margin: 1px;
+  font-size: 1.2em;
+  background: #bdbdbd;
+  border: 1px solid #888;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.1s;
+  user-select: none;
+  position: relative;
+}
+
+.cell.revealed {
+  background: #e0e0e0;
+  border: 1px solid #aaa;
+  cursor: default;
+}
+
+.cell.mine {
+  background: #ffb3b3;
+}
+
+.cell.flagged {
+  background: #bdbdbd;
+}
+
+.cell:active:not(.revealed) {
+  background: #d0d0d0;
+}

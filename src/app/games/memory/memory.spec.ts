@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SnakeComponent } from './snake';
+import { Memory } from './memory';
 
-describe('Snake', () => {
-  let component: SnakeComponent;
-  let fixture: ComponentFixture<SnakeComponent>;
+describe('Memory', () => {
+  let component: Memory;
+  let fixture: ComponentFixture<Memory>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SnakeComponent],
-    }).compileComponents();
+      imports: [Memory]
+    })
+    .compileComponents();
 
-    fixture = TestBed.createComponent(SnakeComponent);
+    fixture = TestBed.createComponent(Memory);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

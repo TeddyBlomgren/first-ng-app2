@@ -7,9 +7,6 @@ import { Weathermodels } from '../models/weather.models';
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
   private apiUrl = 'https://api.openweathermap.org/data/2.5';
-  private headers = new HttpHeaders({
-    'X-Api-Key': environment.weatherapiKey,
-  });
 
   constructor(private http: HttpClient) {}
   getWeather(city: string): Observable<Weathermodels> {

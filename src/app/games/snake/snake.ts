@@ -6,12 +6,11 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
   templateUrl: './snake.html',
   styleUrls: ['./snake.css'],
 })
-export class AppComponent {
+export class SnakeComponent {
   score = 0;
 
   @ViewChild('screen', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
-  // --- Bryggan: publik metod som kan anropas från templatet ---
   private startGameFn: (() => void) | null = null;
   public startGame() {
     this.startGameFn?.();
