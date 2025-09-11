@@ -1,8 +1,36 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.game {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.game-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.minesweeper-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
 .minesweeper-board {
-  display: inline-block;
+  display: block;
   border: 2px solid #333;
-  background: #eee;
-  padding: 10px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 .row {
@@ -12,31 +40,31 @@
 .cell {
   width: 32px;
   height: 32px;
-  margin: 1px;
-  font-size: 1.2em;
-  background: #bdbdbd;
+  margin: 2px;
+  font-size: 1.1rem;
+  background: #e0e0e0;
   border: 1px solid #888;
+  border-radius: 4px;
   cursor: pointer;
   outline: none;
-  transition: background 0.1s;
   user-select: none;
-  position: relative;
-}
 
-.cell.revealed {
-  background: #e0e0e0;
-  border: 1px solid #aaa;
-  cursor: default;
-}
-
-.cell.mine {
-  background: #ffb3b3;
-}
-
-.cell.flagged {
-  background: #bdbdbd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.1s;
 }
 
 .cell:active:not(.revealed) {
   background: #d0d0d0;
+}
+.cell.revealed {
+  background: #fff;
+  border-color: #aaa;
+}
+.cell.mine {
+  background: #f5b5b5;
+}
+.cell.flagged {
+  background: #e0e0e0;
 }
