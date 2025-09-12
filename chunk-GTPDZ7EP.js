@@ -1,1 +1,0 @@
-import{Fa as t,fb as m,gb as r,ub as n}from"./chunk-A7UPANQH.js";var i=class o{static \u0275fac=function(e){return new(e||o)};static \u0275cmp=t({type:o,selectors:[["app-memory"]],decls:2,vars:0,template:function(e,a){e&1&&(m(0,"p"),n(1,"memory works!"),r())},encapsulation:2})};export{i as Memory};
