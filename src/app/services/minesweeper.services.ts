@@ -111,7 +111,7 @@ export class MinesweeperService {
     const cell = this.getCell(r, c);
     if (!cell || cell.isRevealed || cell.isFlagged) return;
 
-    // QoL: första klicket är alltid säkert
+    //första klicket är alltid säkert
     if (this.firstClick && cell.hasMine) {
       this.moveMineAway(r, c);
 

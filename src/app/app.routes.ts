@@ -40,7 +40,7 @@ export const routes: Routes = [
       },
       {
         path: 'memory',
-        loadComponent: () => import('./games/memory/memory').then((c) => c.Memory),
+        loadComponent: () => import('./games/memory/memory').then((c) => c.MemoryComponent),
       },
       {
         path: 'minesweeper',

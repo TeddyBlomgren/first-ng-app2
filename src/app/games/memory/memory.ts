@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
-import { MemoryServices } from '../../services/memory.services';
+import { MemoryService } from '../../services/memory.services';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-memory',
-  imports: [],
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './memory.html',
-  styleUrl: './memory.css',
+  styleUrls: ['./memory.css'],
 })
-export class Memory {}
+export class MemoryComponent {
+  constructor(public memory: MemoryService) {}
+
+  onCardClick(i: number) {
+    this.memory.handleCard(i);
+  }
+
+  onReset() {
+    this.memory.resetGame();
+  }
+}

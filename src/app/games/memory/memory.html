@@ -1,1 +1,10 @@
-<p>memory works!</p>
+<div class="board">
+  <button class="card" *ngFor="let card of memory.cards; let i = index" (click)="onCardClick(i)">
+    <span *ngIf="memory.isFlipped(i); else hidden">{{ card }}</span>
+    <ng-template #hidden>❓</ng-template>
+  </button>
+</div>
+
+<p>Drag: {{ memory.moves }}</p>
+<p *ngIf="memory.gameWon">🎉 Du vann på {{ memory.moves }} drag!</p>
+<button (click)="onReset()">Starta om</button>
