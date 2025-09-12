@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+type Level = 'easy' | 'medium' | 'hard';
+
 @Injectable({ providedIn: 'root' })
 export class MemoryService {
   cards: string[] = [];
@@ -11,6 +13,14 @@ export class MemoryService {
   gameWon = false;
 
   private isResolving = false;
+
+  private readonly PAIRS_BY_LEVEL: Record<Level, string[]> = {
+    easy: ['🍒', '🍇', '🍍', '🍓'],
+    medium: ['🍒', '🍇', '🍍', '🍓', '🍎', '🍌'],
+    hard: ['🍒', '🍇', '🍍', '🍓', '🍎', '🍌', '🥝', '🍉'],
+  };
+
+  private selectedPairs: string[] = this.PAIRS_BY_LEVEL.easy;
 
   constructor() {
     this.resetGame();
@@ -25,10 +35,14 @@ export class MemoryService {
     return deck;
   }
 
+  setDifficulty(level: Level): void {
+    this.selectedPairs = this.PAIRS_BY_LEVEL[level];
+    this.resetGame();
+  }
+
   private initGame(): void {
-    const pairs = ['🍒', '🍇', '🍍', '🍓', '🍎', '🍌'];
-    this.cards = this.buildDeck(pairs);
-    this.totalPairs = pairs.length;
+    this.cards = this.buildDeck(this.selectedPairs);
+    this.totalPairs = this.selectedPairs.length;
   }
 
   resetGame(): void {
@@ -40,7 +54,7 @@ export class MemoryService {
     this.gameWon = false;
     this.isResolving = false;
   }
-  /** Får kortet vändas nu? */
+
   private canFlip(index: number): boolean {
     return (
       !this.isResolving &&
@@ -55,7 +69,6 @@ export class MemoryService {
 
     this.flippedCards = [...this.flippedCards, index];
 
-    // om två uppe -> jämför
     if (this.flippedCards.length === 2) {
       this.isResolving = true;
       this.moves++;

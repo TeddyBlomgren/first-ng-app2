@@ -3,15 +3,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* fyll hela höjden */
-  background: #f5f5f5; /* ljus bakgrund */
   font-family: system-ui, sans-serif;
 }
 
 /* Wrapper för brädet */
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 80px); /* 4 kolumner */
+  grid-template-columns: repeat(4, 80px);
   gap: 12px;
   padding: 20px;
   background: white;
@@ -38,13 +36,16 @@
   background: #ccc;
 }
 
-/* Texten under */
-p {
-  text-align: center;
-  margin-top: 16px;
-  font-size: 18px;
-}
-
 button {
   cursor: pointer;
+}
+.memory-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.memory-header {
+  text-align: center;
 }
