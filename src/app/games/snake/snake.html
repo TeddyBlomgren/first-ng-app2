@@ -1,25 +1,23 @@
-
 <div id="container">
-    <h1>Snake Game</h1>
- <div class="controls">
-  <p><b>Kontroller:</b></p>
-  <div class="keys">
-    <div class="row">
-      <span class="key">W</span>
-    </div>
-    <div class="row">
-      <span class="key">A</span>
-      <span class="key">S</span>
-      <span class="key">D</span>
+  <h1>Snake Game</h1>
+  <h2 id="score">Score: {{ score }}</h2>
+
+  <div>
+    <button (click)="startGame()">Start Game</button>
+  </div>
+  <canvas #screen id="screen"></canvas>
+
+  <div class="controls">
+    <p><b>Kontroller:</b></p>
+    <div class="keys">
+      <div class="row">
+        <button (click)="changeDirectionButton('up')" class="key">W</button>
+      </div>
+      <div class="row">
+        <button (click)="changeDirectionButton('left')" class="key">A</button>
+        <button (click)="changeDirectionButton('down')" class="key">S</button>
+        <button (click)="changeDirectionButton('right')" class="key">D</button>
+      </div>
     </div>
   </div>
-</div>
-
-
-    <div>
-        <button (click)="startGame()">Start Game</button>
-    </div>
-    <canvas #screen id="screen"></canvas>
-    <h2 id="score">Score: {{ score }}</h2>
-    
 </div>

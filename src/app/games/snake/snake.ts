@@ -10,8 +10,44 @@ export class SnakeComponent {
   score = 0;
 
   @ViewChild('screen', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+  private readonly CELL = 20;
+  private xVelocity = this.CELL;
+  private yVelocity = 0;
 
   private startGameFn: (() => void) | null = null;
+  public changeDirectionButton(direction: 'up' | 'down' | 'left' | 'right') {
+    const goingUp = this.yVelocity === -this.CELL;
+    const goingDown = this.yVelocity === this.CELL;
+    const goingRight = this.xVelocity === this.CELL;
+    const goingLeft = this.xVelocity === -this.CELL;
+
+    switch (direction) {
+      case 'up':
+        if (!goingDown) {
+          this.xVelocity = 0;
+          this.yVelocity = -this.CELL;
+        }
+        break;
+      case 'down':
+        if (!goingUp) {
+          this.xVelocity = 0;
+          this.yVelocity = this.CELL;
+        }
+        break;
+      case 'left':
+        if (!goingRight) {
+          this.xVelocity = -this.CELL;
+          this.yVelocity = 0;
+        }
+        break;
+      case 'right':
+        if (!goingLeft) {
+          this.xVelocity = this.CELL;
+          this.yVelocity = 0;
+        }
+        break;
+    }
+  }
   public startGame() {
     this.startGameFn?.();
   }
@@ -44,9 +80,7 @@ export class SnakeComponent {
       { x: CELL * 0, y: 0 },
     ];
 
-    let xVelocity = CELL;
-    let yVelocity = 0;
-    let gamInterval: number | null = null; // du använde både loop + interval; vi låter det vara kvar, men du kan ta bort om du bara kör loop
+    let gamInterval: number | null = null; // använder både loop ocg interval
     let isGameRunning = false;
 
     let foodX = 0;
@@ -84,39 +118,72 @@ export class SnakeComponent {
     };
 
     const moveSnake = () => {
-      const head = { x: snake[0].x + xVelocity, y: snake[0].y + yVelocity };
+      const head = { x: snake[0].x + this.xVelocity, y: snake[0].y + this.yVelocity };
       snake.unshift(head);
     };
 
+    const changeDirectionButton = (direction: 'up' | 'down' | 'left' | 'right') => {
+      const goingUp = this.yVelocity === -CELL;
+      const goingDown = this.yVelocity === CELL;
+      const goingRight = this.xVelocity === CELL;
+      const goingLeft = this.xVelocity === -CELL;
+      switch (direction) {
+        case 'up':
+          if (!goingDown) {
+            this.xVelocity = 0;
+            this.yVelocity = -CELL;
+          }
+          break;
+        case 'down':
+          if (!goingUp) {
+            this.xVelocity = 0;
+            this.yVelocity = CELL;
+          }
+          break;
+        case 'left':
+          if (!goingRight) {
+            this.xVelocity = -CELL;
+            this.yVelocity = 0;
+          }
+          break;
+        case 'right':
+          if (!goingLeft) {
+            this.xVelocity = CELL;
+            this.yVelocity = 0;
+          }
+          break;
+      }
+    };
+
     const changeDirection = (e: KeyboardEvent) => {
-      const goingUp = yVelocity === -CELL;
-      const goingDown = yVelocity === CELL;
-      const goingRight = xVelocity === CELL;
-      const goingLeft = xVelocity === -CELL;
+      const goingUp = this.yVelocity === -CELL;
+      const goingDown = this.yVelocity === CELL;
+      const goingRight = this.xVelocity === CELL;
+      const goingLeft = this.xVelocity === -CELL;
 
       switch (e.key.toLowerCase()) {
         case 'a':
           if (!goingRight) {
-            xVelocity = -CELL;
-            yVelocity = 0;
+            this.xVelocity = -CELL;
+            this.yVelocity = 0;
           }
           break;
         case 'd':
           if (!goingLeft) {
-            xVelocity = CELL;
-            yVelocity = 0;
+            this.xVelocity = CELL;
+            this.yVelocity = 0;
           }
           break;
         case 'w':
           if (!goingDown) {
-            xVelocity = 0;
-            yVelocity = -CELL;
+            this.xVelocity = 0;
+            this.yVelocity = -CELL;
           }
           break;
         case 's':
           if (!goingUp) {
-            xVelocity = 0;
-            yVelocity = CELL;
+            this.xVelocity = 0;
+            this.yVelocity = CELL;
           }
           break;
       }
@@ -125,7 +192,7 @@ export class SnakeComponent {
     window.addEventListener('keydown', changeDirection);
     createFood();
 
-    // --- Huvudloopen (startas först när du klickar Start) ---
+    // --- Huvudloopen startas först när du klickar Start
     const loop = () => {
       if (gameOver) {
         isGameRunning = false;
@@ -167,16 +234,14 @@ export class SnakeComponent {
         { x: 60, y: 0 },
         { x: 40, y: 0 },
       ];
-      xVelocity = CELL;
-      yVelocity = 0;
+      this.xVelocity = CELL;
+      this.yVelocity = 0;
       this.score = 0;
       gameOver = false;
       speed = 250;
 
       loop();
     };
-
-    // --- Koppla bryggan ---
     this.startGameFn = startGameLocal;
   }
 }
