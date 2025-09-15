@@ -55,6 +55,12 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'Kalender',
+    loadComponent: () => {
+      return import('./calendar/calendar').then((c) => c.calendarComponent);
+    },
+  },
+  {
     path: 'about',
     loadComponent: () => {
       return import('./about/about').then((c) => c.About);

@@ -13,45 +13,221 @@ import { Observable, throwError as _observableThrow, of as _observableOf } from 
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-export const API_CHATTER_BASE_URL = new InjectionToken<string>('API_CHATTER_BASE_URL');
+export const API_BASE_URL_Calender = new InjectionToken<string>('API_BASE_URL_Calender');
 
-export interface IPmClient {
+export interface ICalenderClient {
+    /**
+     * @return OK
+     */
+    eventsAll(): Observable<Event[]>;
     /**
      * @param body (optional) 
      * @return OK
      */
-    pm(body: PM | undefined): Observable<void>;
+    eventsPOST(body: Event | undefined): Observable<Event>;
     /**
      * @return OK
      */
-    inbox(userId: string): Observable<void>;
+    eventsGET(id: number): Observable<Event>;
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    eventsPUT(id: number, body: Event | undefined): Observable<void>;
     /**
      * @return OK
      */
-    sent(userId: string): Observable<void>;
-    /**
-     * @return OK
-     */
-    conversation(userAId: string, userBId: string): Observable<void>;
+    eventsDELETE(id: number): Observable<void>;
 }
 
 @Injectable()
-export class PmClient implements IPmClient {
+export class CalenderClient implements ICalenderClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_CHATTER_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL_Calender) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    eventsAll(): Observable<Event[]> {
+        let url_ = this.baseUrl + "/Events";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventsAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEventsAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Event[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Event[]>;
+        }));
+    }
+
+    protected processEventsAll(response: HttpResponseBase): Observable<Event[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Event.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    pm(body: PM | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Pm";
+    eventsPOST(body: Event | undefined): Observable<Event> {
+        let url_ = this.baseUrl + "/Events";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventsPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEventsPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Event>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Event>;
+        }));
+    }
+
+    protected processEventsPOST(response: HttpResponseBase): Observable<Event> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Event.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    eventsGET(id: number): Observable<Event> {
+        let url_ = this.baseUrl + "/Events/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventsGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEventsGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Event>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Event>;
+        }));
+    }
+
+    protected processEventsGET(response: HttpResponseBase): Observable<Event> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Event.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    eventsPUT(id: number, body: Event | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Events/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -65,12 +241,12 @@ export class PmClient implements IPmClient {
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPm(response_);
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventsPUT(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPm(response_ as any);
+                    return this.processEventsPUT(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -79,7 +255,7 @@ export class PmClient implements IPmClient {
         }));
     }
 
-    protected processPm(response: HttpResponseBase): Observable<void> {
+    protected processEventsPUT(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -101,11 +277,11 @@ export class PmClient implements IPmClient {
     /**
      * @return OK
      */
-    inbox(userId: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Pm/inbox/{userId}";
-        if (userId === undefined || userId === null)
-            throw new Error("The parameter 'userId' must be defined.");
-        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+    eventsDELETE(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/Events/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -115,12 +291,12 @@ export class PmClient implements IPmClient {
             })
         };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processInbox(response_);
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventsDELETE(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processInbox(response_ as any);
+                    return this.processEventsDELETE(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -129,110 +305,7 @@ export class PmClient implements IPmClient {
         }));
     }
 
-    protected processInbox(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    sent(userId: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Pm/sent/{userId}";
-        if (userId === undefined || userId === null)
-            throw new Error("The parameter 'userId' must be defined.");
-        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSent(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSent(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processSent(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    conversation(userAId: string, userBId: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Pm/conversation/{userAId}/{userBId}";
-        if (userAId === undefined || userAId === null)
-            throw new Error("The parameter 'userAId' must be defined.");
-        url_ = url_.replace("{userAId}", encodeURIComponent("" + userAId));
-        if (userBId === undefined || userBId === null)
-            throw new Error("The parameter 'userBId' must be defined.");
-        url_ = url_.replace("{userBId}", encodeURIComponent("" + userBId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processConversation(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processConversation(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processConversation(response: HttpResponseBase): Observable<void> {
+    protected processEventsDELETE(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -252,15 +325,14 @@ export class PmClient implements IPmClient {
     }
 }
 
-export class PM implements IPM {
+export class Event implements IEvent {
     id?: number;
-    senderId?: string | undefined;
-    receiverId?: string | undefined;
-    content?: string | undefined;
-    sentAt?: Date;
-    isRead?: boolean;
+    title!: string | undefined;
+    start?: Date;
+    end?: Date;
+    allday?: boolean;
 
-    constructor(data?: IPM) {
+    constructor(data?: IEvent) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -272,17 +344,16 @@ export class PM implements IPM {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.senderId = _data["senderId"];
-            this.receiverId = _data["receiverId"];
-            this.content = _data["content"];
-            this.sentAt = _data["sentAt"] ? new Date(_data["sentAt"].toString()) : <any>undefined;
-            this.isRead = _data["isRead"];
+            this.title = _data["title"];
+            this.start = _data["start"] ? new Date(_data["start"].toString()) : <any>undefined;
+            this.end = _data["end"] ? new Date(_data["end"].toString()) : <any>undefined;
+            this.allday = _data["allday"];
         }
     }
 
-    static fromJS(data: any): PM {
+    static fromJS(data: any): Event {
         data = typeof data === 'object' ? data : {};
-        let result = new PM();
+        let result = new Event();
         result.init(data);
         return result;
     }
@@ -290,22 +361,20 @@ export class PM implements IPM {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["senderId"] = this.senderId;
-        data["receiverId"] = this.receiverId;
-        data["content"] = this.content;
-        data["sentAt"] = this.sentAt ? this.sentAt.toISOString() : <any>undefined;
-        data["isRead"] = this.isRead;
+        data["title"] = this.title;
+        data["start"] = this.start ? this.start.toISOString() : <any>undefined;
+        data["end"] = this.end ? this.end.toISOString() : <any>undefined;
+        data["allday"] = this.allday;
         return data;
     }
 }
 
-export interface IPM {
+export interface IEvent {
     id?: number;
-    senderId?: string | undefined;
-    receiverId?: string | undefined;
-    content?: string | undefined;
-    sentAt?: Date;
-    isRead?: boolean;
+    title: string | undefined;
+    start?: Date;
+    end?: Date;
+    allday?: boolean;
 }
 
 export class SwaggerException extends Error {
