@@ -2,7 +2,9 @@
   <div class="memory-header">
     <h1>Memory Game</h1>
     <p>Drag: {{ memory.moves }}</p>
-    <p *ngIf="memory.gameWon">🎉 Du vann på {{ memory.moves }} drag!</p>
+    @if (memory.gameWon) {
+      <p>🎉 Du vann på {{ memory.moves }} drag!</p>
+    }
     <label>
       Svårighet:
       <select [(ngModel)]="difficulty" (ngModelChange)="memory.setDifficulty($event)">
@@ -16,9 +18,14 @@
   </div>
 
   <div class="board">
-    <button class="card" *ngFor="let card of memory.cards; let i = index" (click)="onCardClick(i)">
-      <span *ngIf="memory.isFlipped(i); else hidden">{{ card }}</span>
-      <ng-template #hidden>❓</ng-template>
-    </button>
+    @for (card of memory.cards; track card; let i = $index) {
+      <button class="card" (click)="onCardClick(i)">
+        @if (memory.isFlipped(i)) {
+          <span>{{ card }}</span>
+        } @else {
+          ❓
+        }
+      </button>
+    }
   </div>
 </div>

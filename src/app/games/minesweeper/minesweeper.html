@@ -14,10 +14,11 @@
   </div>
 
   <div class="minesweeper-board">
-    <div class="row" *ngFor="let row of board; let r = index">
+    @for (row of board; let r = $index; track r) {
+    <div class="row">
+      @for (cell of row; let c = $index; track c) {
       <button
         class="cell"
-        *ngFor="let cell of row; let c = index"
         [class.revealed]="cell.isRevealed"
         [class.mine]="cell.isRevealed && cell.hasMine"
         [class.flagged]="cell.isFlagged"
@@ -25,13 +26,14 @@
         (contextmenu)="onRightClick($event, r, c)"
         aria-label="Ruta {{ r + 1 }}, {{ c + 1 }}"
       >
-        <ng-container *ngIf="cell.isRevealed; else hidden">
-          {{ cell.hasMine ? '💣' : cell.adjacentMines || '' }}
-        </ng-container>
-        <ng-template #hidden>
-          {{ cell.isFlagged ? '🚩' : '' }}
-        </ng-template>
+        @if (cell.isRevealed) {
+        {{ cell.hasMine ? '💣' : cell.adjacentMines || '' }}
+        } @else {
+        {{ cell.isFlagged ? '🚩' : '' }}
+        }
       </button>
+      }
     </div>
+    }
   </div>
 </div>

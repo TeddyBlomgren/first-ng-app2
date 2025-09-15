@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { FourInARowService } from '../../services/four-in-a-row';
 import { FourInARow as FourInARowstate } from '../../models/four-in-a-row.models';
@@ -7,7 +7,7 @@ import { FourInARow as FourInARowstate } from '../../models/four-in-a-row.models
 @Component({
   selector: 'app-four-in-a-row',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './four-in-a-row.html',
   styleUrl: './four-in-a-row.css',
 })

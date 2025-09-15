@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { MemoryService } from '../../services/memory.services';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-memory',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './memory.html',
   styleUrls: ['./memory.css'],
 })

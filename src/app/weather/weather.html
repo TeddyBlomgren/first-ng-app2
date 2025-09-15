@@ -4,16 +4,20 @@
     <button (click)="search()">Hämta väder</button>
   </div>
 
-  <div *ngIf="weather">
-    <h3>{{ weather.name }}</h3>
-    <p>{{ weather.weather[0].description | titlecase }}</p>
-    <p>🌡️ {{ weather.main.temp }} °C</p>
-    <small>
-      Min: {{ weather.main.temp_min }} °C | Max: {{ weather.main.temp_max }} °C
-    </small>
-    <p>💧 Luftfuktighet: {{ weather.main.humidity }} %</p>
-    <p>💨 Vind: {{ weather.wind.speed }} m/s</p>
-  </div>
+  @if (weather) {
+    <div>
+      <h3>{{ weather.name }}</h3>
+      <p>{{ weather.weather[0].description | titlecase }}</p>
+      <p>🌡️ {{ weather.main.temp }} °C</p>
+      <small>
+        Min: {{ weather.main.temp_min }} °C | Max: {{ weather.main.temp_max }} °C
+      </small>
+      <p>💧 Luftfuktighet: {{ weather.main.humidity }} %</p>
+      <p>💨 Vind: {{ weather.wind.speed }} m/s</p>
+    </div>
+  }
 
-  <p *ngIf="error" class="error">{{ error }}</p>
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
 </div>

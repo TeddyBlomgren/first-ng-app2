@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { TicTacToeService } from '../../services/ticTacToe.Services';
 import { TicTacToe as TicTacToeModel } from '../../models/ticTacToe.models';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-tic-tac-toe',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './tic-tac-toe.html',
   styleUrls: ['./tic-tac-toe.css'],
 })

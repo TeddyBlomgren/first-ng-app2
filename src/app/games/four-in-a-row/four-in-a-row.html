@@ -4,42 +4,50 @@
   <table class="four-in-a-row" aria-label="Fyra i rad-bräde">
     <thead>
       <tr>
-        <th *ngFor="let _ of game.board[0]; let c = index">
-          <button type="button"
-                  (click)="play(c)"
-                  [disabled]="game.winner || isBoardFull()"
-                  aria-label="Släpp bricka i kolumn {{ c + 1 }}">
-            ▼
-          </button>
-        </th>
+        @for (_ of game.board[0]; track _; let c = $index) {
+          <th>
+            <button type="button"
+              (click)="play(c)"
+              [disabled]="game.winner || isBoardFull()"
+              aria-label="Släpp bricka i kolumn {{ c + 1 }}">
+              ▼
+            </button>
+          </th>
+        }
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let row of game.board; let r = index">
-        <td *ngFor="let cell of row; let c = index"
-            (click)="!game.winner && !isBoardFull() && play(c)"
-            [class.r]="cell === 'R'"
-            [class.y]="cell === 'Y'">
-          <span class="disc" [attr.data-cell]="cell"></span>
-        </td>
-      </tr>
+      @for (row of game.board; track row; let r = $index) {
+        <tr>
+          @for (cell of row; track cell; let c = $index) {
+            <td
+              (click)="!game.winner && !isBoardFull() && play(c)"
+              [class.r]="cell === 'R'"
+              [class.y]="cell === 'Y'">
+              <span class="disc" [attr.data-cell]="cell"></span>
+            </td>
+          }
+        </tr>
+      }
     </tbody>
   </table>
 
   <div class="status" aria-live="polite">
-    <p *ngIf="game.winner as w; else noWinner">
-      {{ fourInARowService.playerNames[w] }} vinner! 🎉
-    </p>
-
-    <ng-template #noWinner>
-      <p *ngIf="!isBoardFull(); else draw">
-        Nästa tur: {{ fourInARowService.playerNames[fourInARowService.game.currentPlayer] }}
+    @if (game.winner; as w) {
+      <p>
+        {{ fourInARowService.playerNames[w] }} vinner! 🎉
       </p>
-      <ng-template #draw>
+    } @else {
+      @if (!isBoardFull()) {
+        <p>
+          Nästa tur: {{ fourInARowService.playerNames[fourInARowService.game.currentPlayer] }}
+        </p>
+      } @else {
         <p>Oavgjort!</p>
-      </ng-template>
-    </ng-template>
+      }
+    }
+
 
     <button type="button" (click)="reset()">Starta om spel</button>
   </div>

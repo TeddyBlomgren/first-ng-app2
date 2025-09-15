@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MinesweeperService, Difficulty } from '../../services/minesweeper.services';
 import { Cell } from '../../models/minesweeper.models';
 
 @Component({
   selector: 'app-minesweeper',
-  imports: [NgFor, NgIf],
+  imports: [],
   standalone: true,
   templateUrl: './minesweeper.html',
   styleUrl: './minesweeper.css',
