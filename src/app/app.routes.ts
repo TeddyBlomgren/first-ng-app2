@@ -57,7 +57,7 @@ export const routes: Routes = [
   {
     path: 'Kalender',
     loadComponent: () => {
-      return import('./calendar/calendar').then((c) => c.calendarComponent);
+      return import('./calendar/calendar').then((c) => c.CalendarComponent);
     },
   },
   {
