@@ -56,7 +56,7 @@ type InputData = {
   ],
 })
 export class InputDialogComponent {
-  // <-- rätt namn här
+
   value: string = '';
 
   constructor(public ref: DialogRef<string | null>, @Inject(DIALOG_DATA) public data: InputData) {
