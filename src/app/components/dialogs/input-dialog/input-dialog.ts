@@ -56,7 +56,10 @@ type InputData = {
   ],
 })
 export class InputDialogComponent {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 558003ed5d6eb7fe41743656f294a520185eac7b
   value: string = '';
 
   constructor(public ref: DialogRef<string | null>, @Inject(DIALOG_DATA) public data: InputData) {
