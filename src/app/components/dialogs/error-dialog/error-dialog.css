@@ -6,9 +6,16 @@
   max-width: 420px;
 }
 
-.actions {
+.dialog p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.dialog-actions {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
   margin-top: 16px;
 }
+
+

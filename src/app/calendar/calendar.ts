@@ -1,4 +1,3 @@
-// src/app/calendar/calendar.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -10,6 +9,7 @@ import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { InputDialogComponent } from '../components/dialogs/input-dialog/input-dialog';
 import { ConfirmDialogComponent } from '../components/dialogs/confirm-dialog/confirm-dialog';
+import { ErrorDialogComponent } from '../components/dialogs/error-dialog/error-dialog';
 
 import { CalendarService } from '../services/calendar.service';
 import { Event as CalendarEvent } from '../domain/Event/calenderClient';
@@ -28,6 +28,8 @@ export class CalendarComponent {
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
     editable: true,
+    eventStartEditable: true,
+    eventDurationEditable: true,
     weekends: true,
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     locale: 'sv',
@@ -41,21 +43,35 @@ export class CalendarComponent {
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
 
-    // Hämta ALLTID direkt från API
     events: async () => {
-      const apiEvents = await firstValueFrom(this.calendarService.getAll());
-      return apiEvents.map((e) => ({
-        id: e.id != null ? String(e.id) : undefined,
-        title: e.title ?? '',
-        start: e.start as any, // kan vara Date redan (NSwag fromJS), annars ISO-string funkar också i FullCalendar
-        end: e.end as any,
-        allDay: !!((e as any).allday ?? (e as any).allDay ?? (e as any).isAllDay),
-      }));
+      try {
+        const apiEvents = await firstValueFrom(this.calendarService.getAll());
+        return apiEvents.map((e) => ({
+          id: e.id != null ? String(e.id) : undefined,
+          title: e.title ?? '',
+          start: e.start as any,
+          end: e.end as any,
+          allDay: !!((e as any).allday ?? (e as any).allDay ?? (e as any).isAllDay),
+        }));
+      } catch {
+        this.dialog.open(ErrorDialogComponent, {
+          data: { title: 'Fel vid laddning', message: 'Kunde inte hämta bokningar.' },
+        });
+        return [];
+      }
     },
 
     dateClick: (arg) => this.handleDateClick(arg),
     eventClick: (arg) => this.handleEventClick(arg),
+
+    eventChange: (info) => this.handleEventChange(info),
   };
+
+  private toLocalISOString(d: Date | null): string {
+    if (!d) return '';
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 19);
+  }
 
   handleDateClick(arg: DateClickArg) {
     const isMonthView = arg.view.type === 'dayGridMonth' || arg.allDay === true;
@@ -79,19 +95,16 @@ export class CalendarComponent {
       .closed.subscribe(async (title) => {
         if (!title?.trim()) return;
 
-        // Viktigt: NSwag-klass -> skapa instans och använd Date-objekt
         const payload = new CalendarEvent();
         payload.title = title.trim();
 
         if (isMonthView) {
-          // All-day: sätt start till midnatt och end till nästa dygn (vanligt mönster)
           const start = new Date(arg.date.getFullYear(), arg.date.getMonth(), arg.date.getDate());
           const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
           payload.start = start;
           payload.end = end;
-          (payload as any).allday = true; // ändra till .allDay om din DTO faktiskt heter så
+          (payload as any).allday = true;
         } else {
-          // Timme: start = klickad tid, end = +1h
           const start = new Date(arg.date);
           const end = new Date(start.getTime() + 60 * 60 * 1000);
           payload.start = start;
@@ -99,8 +112,17 @@ export class CalendarComponent {
           (payload as any).allday = false;
         }
 
-        await firstValueFrom(this.calendarService.create(payload));
-        (arg.view.calendar as any).refetchEvents();
+        try {
+          await firstValueFrom(this.calendarService.create(payload));
+          (arg.view.calendar as any).refetchEvents();
+        } catch {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {
+              title: 'Fel vid sparning',
+              message: 'Kunde inte spara händelsen. Försök igen senare.',
+            },
+          });
+        }
       });
   }
 
@@ -128,12 +150,53 @@ export class CalendarComponent {
       })
       .closed.subscribe(async (ok) => {
         if (!ok || !arg.event.id) return;
-        await firstValueFrom(this.calendarService.delete(+arg.event.id));
-        (arg.view.calendar as any).refetchEvents();
+        try {
+          await firstValueFrom(this.calendarService.delete(+arg.event.id));
+          (arg.view.calendar as any).refetchEvents();
+        } catch {
+          this.dialog.open(ErrorDialogComponent, {
+            data: {
+              title: 'Fel vid borttagning',
+              message: 'Kunde inte ta bort händelsen. Försök igen senare.',
+            },
+          });
+        }
       });
   }
 
+  async handleEventChange(info: any): Promise<void> {
+    const e = info?.event;
+    if (!e?.id) {
+      this.dialog.open(ErrorDialogComponent, {
+        data: { title: 'Fel', message: 'Ogiltig uppdatering.' },
+      });
+      info?.revert?.();
+      return;
+    }
+
+    const dto = new CalendarEvent();
+    dto.id = +e.id;
+    dto.title = e.title;
+
+    dto.start = e.start as any;
+    dto.end = e.end as any;
+    (dto as any).allday = e.allDay;
+
+    try {
+      await firstValueFrom(this.calendarService.update(dto));
+      (info.view?.calendar as any)?.refetchEvents?.();
+    } catch {
+      this.dialog.open(ErrorDialogComponent, {
+        data: { title: 'Fel vid uppdatering', message: 'Kunde inte spara ändringen.' },
+      });
+      info?.revert?.();
+    }
+  }
+
   toggleWeekends() {
-    this.calendarOptions.weekends = !this.calendarOptions.weekends;
+    this.calendarOptions = {
+      ...this.calendarOptions,
+      weekends: !this.calendarOptions.weekends,
+    };
   }
 }
