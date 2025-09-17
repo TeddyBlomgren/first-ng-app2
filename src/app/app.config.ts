@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    { provide: API_BASE_URL_Calender, useValue: 'https://localhost:7247' },
+    { provide: API_BASE_URL_Calender, useValue: 'http://localhost:5282' },
     CalenderClient,
   ],
 };
