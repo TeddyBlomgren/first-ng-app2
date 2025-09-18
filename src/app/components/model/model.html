@@ -1,0 +1,31 @@
+<div class="modal d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ title }}</h5>
+        <button type="button" class="btn-close" (click)="onSecondaryClick()"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (body) {
+        <p class="mb-0">{{ body }}</p>
+        } @if (body && showInput) {
+        <div class="mt-3"></div>
+
+        } @if (showInput) {
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="inputValue"
+          [placeholder]="inputPlaceholder"
+        />
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="onSecondaryClick()">Avbryt</button>
+        <button class="btn btn-primary" (click)="onPrimaryClick()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

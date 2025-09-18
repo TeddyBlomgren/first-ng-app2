@@ -1,5 +1,12 @@
 <app-greeting [message]="homeMessage()"></app-greeting>
 <app-counter></app-counter>
-<input [(ngModel)]="inputValue" placeholder="Type somthing" type="text" (keyup)="keyUpHandler($event)">
+<input
+  [(ngModel)]="inputValue"
+  placeholder="Type somthing"
+  type="text"
+  (keyup)="keyUpHandler($event)"
+/>
 
-<p>Knappentryck:  {{(lastKey) }}</p>
+<p>Knappentryck: {{ lastKey }}</p>
+
+<button type="button" class="btn btn-danger">OK</button>

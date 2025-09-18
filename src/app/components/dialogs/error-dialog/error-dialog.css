@@ -1,4 +1,4 @@
-.dialog {
+/* .dialog {
   background: #fff;
   border-radius: 12px;
   padding: 16px;
@@ -16,6 +16,14 @@
   gap: 8px;
   justify-content: flex-end;
   margin-top: 16px;
+} */
+
+/* styles.css */
+.cdk-dialog-container {
+  padding: 0;
+  background: transparent !;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-

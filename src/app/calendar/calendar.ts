@@ -14,6 +14,7 @@ import { ErrorDialogComponent } from '../components/dialogs/error-dialog/error-d
 import { CalendarService } from '../services/calendar.service';
 import { Event as CalendarEvent } from '../domain/Event/calenderClient';
 import { firstValueFrom } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -32,6 +33,8 @@ export class CalendarComponent {
     eventDurationEditable: true,
     weekends: true,
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    events: (fetchInfo, successCallback, failureCallback) =>
+      this.events(successCallback, failureCallback),
     locale: 'sv',
     timeZone: 'local',
     displayEventEnd: true,
@@ -43,34 +46,31 @@ export class CalendarComponent {
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
 
-    events: async () => {
-      try {
-        const apiEvents = await firstValueFrom(this.calendarService.getAll());
-        return apiEvents.map((e) => ({
-          id: e.id != null ? String(e.id) : undefined,
-          title: e.title ?? '',
-          start: e.start as any,
-          end: e.end as any,
-          allDay: !!((e as any).allday ?? (e as any).allDay ?? (e as any).isAllDay),
-        }));
-      } catch {
-        this.dialog.open(ErrorDialogComponent, {
-          data: { title: 'Fel vid laddning', message: 'Kunde inte hämta bokningar.' },
-        });
-        return [];
-      }
-    },
-
     dateClick: (arg) => this.handleDateClick(arg),
     eventClick: (arg) => this.handleEventClick(arg),
 
     eventChange: (info) => this.handleEventChange(info),
   };
 
-  private toLocalISOString(d: Date | null): string {
-    if (!d) return '';
-    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-    return local.toISOString().slice(0, 19);
+  events(successCallback: (events: any[]) => void, failureCallback: (err?: any) => void) {
+    this.calendarService.getAll().subscribe({
+      next: (apiEvents) => {
+        const events = apiEvents.map((e) => ({
+          id: e.id,
+          title: e.title ?? '',
+          start: e.start,
+          end: e.end,
+          allDay: e.allday,
+        }));
+        successCallback(events);
+      },
+      error: (err) => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: { title: 'Fel vid laddning', message: 'Kunde inte hämta bokningar.' },
+        });
+        failureCallback(err);
+      },
+    });
   }
 
   handleDateClick(arg: DateClickArg) {

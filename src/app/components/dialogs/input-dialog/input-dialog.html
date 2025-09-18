@@ -1,4 +1,4 @@
-    <div class="dialog">
+<!-- <div class="dialog">
       <h2>{{ data.title || 'Ny händelse' }}</h2>
       <p *ngIf="data.message">{{ data.message }}</p>
 
@@ -13,4 +13,16 @@
         <button type="button" (click)="ref.close(null)">Avbryt</button>
         <button type="button" (click)="ok()">OK</button>
       </div>
-    </div>
+ -->
+
+<!-- input-dialog.html -->
+<app-modal
+  [title]="data.title || 'Ny händelse'"
+  [body]="data.message || ''"
+  [showInput]="true"
+  [inputDefaultValue]="value"
+  [primaryButtonText]="'OK'"
+  [secondaryButtonText]="'Avbryt'"
+  (primaryAction)="ok($event)"
+  (secondaryAction)="close()"
+/>

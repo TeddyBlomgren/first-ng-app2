@@ -1,8 +1,9 @@
-    <div class="dialog">
-      <h2>{{ data.title || 'Bekräfta' }}</h2>
-      <p>{{ data.message }}</p>
-      <div class="actions">
-        <button type="button" (click)="ref.close(false)">{{ data.cancelText || 'Nej' }}</button>
-        <button type="button" (click)="ref.close(true)">{{ data.confirmText || 'Ja' }}</button>
-      </div>
-    </div>
+<app-modal
+  [title]="data.title || 'Bekräfta'"
+  [body]="data.message"
+  [showInput]="false"
+  [primaryButtonText]="data.confirmText || 'Ja'"
+  [secondaryButtonText]="data.cancelText || 'Nej'"
+  (primaryAction)="confirm()"
+  (secondaryAction)="close()"
+/>

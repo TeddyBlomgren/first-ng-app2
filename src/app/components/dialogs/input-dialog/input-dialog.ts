@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { ModelComponent } from '../../model/model';
 
 type InputData = {
   title?: string;
@@ -13,20 +14,23 @@ type InputData = {
 @Component({
   standalone: true,
   selector: 'app-input-dialog',
-  imports: [CommonModule, FormsModule, DialogModule],
+  imports: [CommonModule, FormsModule, DialogModule, ModelComponent],
   templateUrl: './input-dialog.html',
   styleUrls: ['./input-dialog.css'],
 })
 export class InputDialogComponent {
-
   value: string = '';
 
   constructor(public ref: DialogRef<string | null>, @Inject(DIALOG_DATA) public data: InputData) {
     this.value = data.defaultValue ?? '';
   }
 
-  ok() {
-    const trimmed = this.value.trim();
+  ok(val: string) {
+    const trimmed = val.trim();
     this.ref.close(trimmed.length > 0 ? trimmed : null);
+  }
+
+  close() {
+    this.ref.close(null);
   }
 }

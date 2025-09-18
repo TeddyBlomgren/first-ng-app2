@@ -29,10 +29,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 })
 export class App {
   protected readonly title = signal('first-ng-app2');
-  // Här anger vi plugins direkt i komponenten
+
   calendarPlugins = [dayGridPlugin, interactionPlugin];
 
-  // Exempel-events
   calendarEvents = [
     { title: 'Möte', date: '2025-09-15' },
     { title: 'Födelsedag', date: '2025-09-20' },

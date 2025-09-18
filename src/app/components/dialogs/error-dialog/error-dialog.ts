@@ -1,6 +1,7 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ViewEncapsulation, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { ModelComponent } from '../../model/model';
 
 export type ErrorDialogData = {
   title?: string;
@@ -10,15 +11,13 @@ export type ErrorDialogData = {
 @Component({
   selector: 'app-error-dialog',
   standalone: true,
-  imports: [CommonModule, DialogModule],
+  imports: [ModelComponent],
   templateUrl: './error-dialog.html',
   styleUrls: ['./error-dialog.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ErrorDialogComponent {
-  constructor(
-    public ref: DialogRef<void>,
-    @Inject(DIALOG_DATA) public data: ErrorDialogData
-  ) {}
+  constructor(public ref: DialogRef<void>, @Inject(DIALOG_DATA) public data: ErrorDialogData) {}
 
   close() {
     this.ref.close();
