@@ -48,7 +48,6 @@ export class CalendarComponent {
 
     dateClick: (arg) => this.handleDateClick(arg),
     eventClick: (arg) => this.handleEventClick(arg),
-
     eventChange: (info) => this.handleEventChange(info),
   };
 

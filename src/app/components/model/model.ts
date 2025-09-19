@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './model.html',
   styleUrl: './model.css',
 })
@@ -12,8 +13,16 @@ export class ModelComponent {
   @Input() title = 'Modal title';
   @Input() body = '';
   @Input() showInput = false;
+  @Input() showSecButton = false;
   @Input() primaryButtonText = 'OK';
   @Input() secondaryButtonText = 'Close';
+
+  @Input() firstBtnColor: 'primary' | 'secondary' | 'warning' | 'danger' | 'success' | 'info' =
+    'primary';
+  @Input() secBtnColor: 'primary' | 'secondary' | 'warning' | 'danger' | 'success' | 'info' =
+    'secondary';
+  @Input() titleColor: 'primary' | 'danger' | 'warning' | 'success' | 'dark' = 'dark';
+  @Input() textColor: 'primary' | 'danger' | 'warning' | 'success' | 'dark' = 'dark';
 
   @Input() inputDefaultValue = '';
   @Input() inputPlaceholder = 'Titel';

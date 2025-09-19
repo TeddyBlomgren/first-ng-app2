@@ -15,7 +15,6 @@
       </div>
  -->
 
-<!-- input-dialog.html -->
 <app-modal
   [title]="data.title || 'Ny händelse'"
   [body]="data.message || ''"
@@ -25,4 +24,6 @@
   [secondaryButtonText]="'Avbryt'"
   (primaryAction)="ok($event)"
   (secondaryAction)="close()"
+  [showSecButton]="true"
+  [firstBtnColor]="'success'"
 />
