@@ -19,11 +19,3 @@
 } */
 
 /* styles.css */
-.cdk-dialog-container {
-  padding: 0;
-  background: transparent !;
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}

@@ -108,20 +108,19 @@ export class CalendarComponent {
           const end = new Date(start.getTime() + 60 * 60 * 1000);
           payload.start = start;
           payload.end = end;
-          (payload as any).allday = false;
+          payload.allday = false;
         }
 
-        try {
-          await firstValueFrom(this.calendarService.create(payload));
-          (arg.view.calendar as any).refetchEvents();
-        } catch {
-          this.dialog.open(ErrorDialogComponent, {
-            data: {
-              title: 'Fel vid sparning',
-              message: 'Kunde inte spara händelsen. Försök igen senare.',
-            },
-          });
-        }
+        this.calendarService.create(payload).subscribe({
+          next: () => (arg.view.calendar as any).refetchEvents(),
+          error: () =>
+            this.dialog.open(ErrorDialogComponent, {
+              data: {
+                title: 'Fel vid sparning',
+                message: 'Kunde inte spara händelsen. Försök igen senare.',
+              },
+            }),
+        });
       });
   }
 
@@ -149,17 +148,17 @@ export class CalendarComponent {
       })
       .closed.subscribe(async (ok) => {
         if (!ok || !arg.event.id) return;
-        try {
-          await firstValueFrom(this.calendarService.delete(+arg.event.id));
-          (arg.view.calendar as any).refetchEvents();
-        } catch {
-          this.dialog.open(ErrorDialogComponent, {
-            data: {
-              title: 'Fel vid borttagning',
-              message: 'Kunde inte ta bort händelsen. Försök igen senare.',
-            },
-          });
-        }
+
+        this.calendarService.delete(+arg.event.id).subscribe({
+          next: () => (arg.view.calendar as any).refetchEvents(),
+          error: () =>
+            this.dialog.open(ErrorDialogComponent, {
+              data: {
+                title: 'Fel vid borttagning',
+                message: 'Kunde inte ta bort händelsen. Försök igen senare.',
+              },
+            }),
+        });
       });
   }
 
@@ -181,15 +180,15 @@ export class CalendarComponent {
     dto.end = e.end as any;
     (dto as any).allday = e.allDay;
 
-    try {
-      await firstValueFrom(this.calendarService.update(dto));
-      (info.view?.calendar as any)?.refetchEvents?.();
-    } catch {
-      this.dialog.open(ErrorDialogComponent, {
-        data: { title: 'Fel vid uppdatering', message: 'Kunde inte spara ändringen.' },
-      });
-      info?.revert?.();
-    }
+    this.calendarService.update(dto).subscribe({
+      next: () => (info.view?.calendar as any)?.refetchEvents?.(),
+      error: () => {
+        this.dialog.open(ErrorDialogComponent, {
+          data: { title: 'Fel vid uppdatering', message: 'Kunde inte spara ändringen.' },
+        });
+        info?.revert?.();
+      },
+    });
   }
 
   toggleWeekends() {

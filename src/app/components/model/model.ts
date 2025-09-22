@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class ModelComponent {
   @Input() title = 'Modal title';
   @Input() body = '';
+
   @Input() showInput = false;
   @Input() showSecButton = false;
   @Input() primaryButtonText = 'OK';
