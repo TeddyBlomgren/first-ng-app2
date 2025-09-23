@@ -52,15 +52,21 @@ h1 {
 .key {
   display: inline-block;
   margin: 5px;
-  padding: 10px 14px;
+  padding: 20x 28px;
   border: 2px solid #2e7d32;
   border-radius: 6px;
   background: #f9f9f9;
   box-shadow: 0 3px 0 #2e7d32, 0 3px 6px rgba(0, 0, 0, 0.3);
   font-weight: bold;
-  font-size: 16px;
-  min-width: 36px;
+  font-size: 22px;
+  min-width: 70px;
+  min-height: 60px;
   text-align: center;
   cursor: default;
   user-select: none;
+}
+.key-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
