@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import bootstrap5Plugin from '@fullcalendar/bootstrap5';
+import listPlugin from '@fullcalendar/list';
 
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { InputDialogComponent } from '../components/dialogs/input-dialog/input-dialog';
@@ -13,8 +15,6 @@ import { ErrorDialogComponent } from '../components/dialogs/error-dialog/error-d
 
 import { CalendarService } from '../services/calendar.service';
 import { Event as CalendarEvent } from '../domain/Event/calenderClient';
-import { firstValueFrom } from 'rxjs';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -27,12 +27,18 @@ export class CalendarComponent {
   constructor(private dialog: Dialog, private calendarService: CalendarService) {}
 
   calendarOptions: CalendarOptions = {
+    themeSystem: 'bootstrap5',
+    weekNumbers: true,
+    weekNumberCalculation: 'ISO',
+    weekNumberContent: (arg) => ({ html: `v. ${arg.num}` }),
     initialView: 'dayGridMonth',
+    dayMaxEvents: true,
     editable: true,
     eventStartEditable: true,
     eventDurationEditable: true,
     weekends: true,
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    firstDay: 1,
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrap5Plugin, listPlugin],
     events: (fetchInfo, successCallback, failureCallback) =>
       this.events(successCallback, failureCallback),
     locale: 'sv',
@@ -43,7 +49,16 @@ export class CalendarComponent {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+    },
+    buttonText: {
+      prev: '⇦',
+      next: '⇨',
+      today: 'Idag',
+      month: 'Månad',
+      week: 'Vecka',
+      day: 'Dag',
+      list: 'Lista',
     },
 
     dateClick: (arg) => this.handleDateClick(arg),

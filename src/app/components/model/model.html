@@ -18,6 +18,7 @@
           class="form-control"
           [(ngModel)]="inputValue"
           [placeholder]="inputPlaceholder"
+          (keydown.enter)="onPrimaryClick()"
         />
         }
       </div>

@@ -1,3 +1,5 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
 .fullcalendar-wrap {
   max-width: 700px;
   margin: 20px auto;

@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Weathermodels } from '../models/weather.models';
 
-
-
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
   private apiUrl = 'https://api.openweathermap.org/data/2.5';
@@ -15,6 +13,17 @@ export class WeatherService {
     return this.http.get<Weathermodels>(`${this.apiUrl}/weather`, {
       params: {
         q: city,
+        appid: environment.weatherapiKey,
+        units: 'metric',
+        lang: 'sv',
+      },
+    });
+  }
+  getWeatherByCoords(lat: number, lon: number): Observable<Weathermodels> {
+    return this.http.get<Weathermodels>(`${this.apiUrl}/weather`, {
+      params: {
+        lat,
+        lon,
         appid: environment.weatherapiKey,
         units: 'metric',
         lang: 'sv',
