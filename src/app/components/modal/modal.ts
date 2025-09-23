@@ -6,10 +6,10 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-modal',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './model.html',
-  styleUrl: './model.css',
+  templateUrl: './modal.html',
+  styleUrl: './modal.css',
 })
-export class ModelComponent {
+export class ModalComponent {
   @Input() title = 'Modal title';
   @Input() body = '';
 

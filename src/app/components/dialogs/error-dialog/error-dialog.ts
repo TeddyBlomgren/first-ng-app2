@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule, DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { ModelComponent } from '../../model/model';
+import { ModalComponent } from '../../modal/modal';
 
 export type ErrorDialogData = {
   title?: string;
@@ -11,7 +11,7 @@ export type ErrorDialogData = {
 @Component({
   selector: 'app-error-dialog',
   standalone: true,
-  imports: [ModelComponent],
+  imports: [ModalComponent],
   templateUrl: './error-dialog.html',
   styleUrls: ['./error-dialog.css'],
   encapsulation: ViewEncapsulation.None,

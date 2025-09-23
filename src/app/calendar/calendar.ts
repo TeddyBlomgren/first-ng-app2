@@ -46,6 +46,7 @@ export class CalendarComponent {
     displayEventEnd: true,
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
     slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    allDayText: 'Heldag',
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
