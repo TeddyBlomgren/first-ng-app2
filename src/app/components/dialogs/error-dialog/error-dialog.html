@@ -2,6 +2,7 @@
   [primaryButtonText]="'OK'"
   [firstBtnColor]="'success'"
   (primaryAction)="close()"
+  (secondaryAction)="close()"
 >
   <h5 slot="header" class="text-warning">{{ data.title || 'Ett fel inträffade' }}</h5>
   <p slot="body" class="text-danger">{{ data.message }}</p>

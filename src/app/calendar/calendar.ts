@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
@@ -24,7 +24,30 @@ import { Event as CalendarEvent } from '../domain/Event/calenderClient';
   styleUrls: ['./calendar.css'],
 })
 export class CalendarComponent {
+  private static readonly HOUR_IN_MS = 60 * 60 * 1000;
+  private static readonly DAY_IN_MS = 24 * 60 * 60 * 1000;
+
   constructor(private dialog: Dialog, private calendarService: CalendarService) {}
+
+  private formatDateOnly(date: Date): string {
+    return date.toLocaleDateString('sv-SE');
+  }
+
+  private formatDateTime(date: Date | null): string {
+    return date
+      ? `${date.toLocaleDateString('sv-SE')} ${date.toLocaleTimeString('sv-SE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}`
+      : '';
+  }
+
+  private refetchEvents(calendar: any): void {
+    if (calendar?.refetchEvents) {
+      calendar.refetchEvents();
+    }
+  }
 
   calendarOptions: CalendarOptions = {
     themeSystem: 'bootstrap5',
@@ -92,22 +115,16 @@ export class CalendarComponent {
     const isMonthView = arg.view.type === 'dayGridMonth' || arg.allDay === true;
 
     const when = isMonthView
-      ? new Date(
-          arg.date.getFullYear(),
-          arg.date.getMonth(),
-          arg.date.getDate()
-        ).toLocaleDateString('sv-SE')
-      : `${arg.date.toLocaleDateString('sv-SE')} ${arg.date.toLocaleTimeString('sv-SE', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        })}`;
+      ? this.formatDateOnly(
+          new Date(arg.date.getFullYear(), arg.date.getMonth(), arg.date.getDate())
+        )
+      : this.formatDateTime(arg.date);
 
     this.dialog
       .open<string>(InputDialogComponent, {
         data: { title: 'Boka händelse', message: `Boka något för ${when}:`, placeholder: 'Titel' },
       })
-      .closed.subscribe(async (title) => {
+      .closed.subscribe((title) => {
         if (!title?.trim()) return;
 
         const payload = new CalendarEvent();
@@ -115,20 +132,20 @@ export class CalendarComponent {
 
         if (isMonthView) {
           const start = new Date(arg.date.getFullYear(), arg.date.getMonth(), arg.date.getDate());
-          const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+          const end = new Date(start.getTime() + CalendarComponent.DAY_IN_MS);
           payload.start = start;
           payload.end = end;
-          (payload as any).allday = true;
+          payload.allday = true;
         } else {
           const start = new Date(arg.date);
-          const end = new Date(start.getTime() + 60 * 60 * 1000);
+          const end = new Date(start.getTime() + CalendarComponent.HOUR_IN_MS);
           payload.start = start;
           payload.end = end;
           payload.allday = false;
         }
 
         this.calendarService.create(payload).subscribe({
-          next: () => (arg.view.calendar as any).refetchEvents(),
+          next: () => this.refetchEvents(arg.view.calendar),
           error: () =>
             this.dialog.open(ErrorDialogComponent, {
               data: {
@@ -141,17 +158,9 @@ export class CalendarComponent {
   }
 
   handleEventClick(arg: EventClickArg) {
-    const fmt = (d: Date | null) =>
-      d
-        ? `${d.toLocaleDateString('sv-SE')} ${d.toLocaleTimeString('sv-SE', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          })}`
-        : '';
     const when = arg.event.end
-      ? `${fmt(arg.event.start)} – ${fmt(arg.event.end)}`
-      : fmt(arg.event.start);
+      ? `${this.formatDateTime(arg.event.start)} – ${this.formatDateTime(arg.event.end)}`
+      : this.formatDateTime(arg.event.start);
 
     this.dialog
       .open<boolean>(ConfirmDialogComponent, {
@@ -162,11 +171,11 @@ export class CalendarComponent {
           cancelText: 'Nej',
         },
       })
-      .closed.subscribe(async (ok) => {
+      .closed.subscribe((ok) => {
         if (!ok || !arg.event.id) return;
 
         this.calendarService.delete(+arg.event.id).subscribe({
-          next: () => (arg.view.calendar as any).refetchEvents(),
+          next: () => this.refetchEvents(arg.view.calendar),
           error: () =>
             this.dialog.open(ErrorDialogComponent, {
               data: {
@@ -178,7 +187,7 @@ export class CalendarComponent {
       });
   }
 
-  async handleEventChange(info: any): Promise<void> {
+  handleEventChange(info: any): void {
     const e = info?.event;
     if (!e?.id) {
       this.dialog.open(ErrorDialogComponent, {
@@ -192,12 +201,12 @@ export class CalendarComponent {
     dto.id = +e.id;
     dto.title = e.title;
 
-    dto.start = e.start as any;
-    dto.end = e.end as any;
-    (dto as any).allday = e.allDay;
+    dto.start = e.start;
+    dto.end = e.end;
+    dto.allday = e.allDay;
 
     this.calendarService.update(dto).subscribe({
-      next: () => (info.view?.calendar as any)?.refetchEvents?.(),
+      next: () => this.refetchEvents(info.view?.calendar),
       error: () => {
         this.dialog.open(ErrorDialogComponent, {
           data: { title: 'Fel vid uppdatering', message: 'Kunde inte spara ändringen.' },
