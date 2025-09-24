@@ -1,9 +1,10 @@
 <app-modal
-  [title]="data.title || 'Bekräfta'"
-  [body]="data.message"
-  [showInput]="false"
   [primaryButtonText]="data.confirmText || 'Ja'"
   [secondaryButtonText]="data.cancelText || 'Nej'"
+  [showSecButton]="true"
   (primaryAction)="confirm()"
   (secondaryAction)="close()"
-/>
+>
+  <h5 slot="header" class="text-dark">{{ data.title || 'Bekräfta' }}</h5>
+  <p slot="body" class="text-dark">{{ data.message }}</p>
+</app-modal>

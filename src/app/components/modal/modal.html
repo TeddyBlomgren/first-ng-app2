@@ -2,36 +2,48 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 [ngClass]="'text-' + titleColor">{{ title }}</h5>
+        <ng-content select="[slot=header]">
+          <h5 [ngClass]="'text-' + titleColor">{{ title }}</h5>
+        </ng-content>
         <button type="button" class="btn-close" (click)="onSecondaryClick()"></button>
       </div>
 
       <div class="modal-body">
-        @if (body) {
-        <p [ngClass]="'text-' + textColor">{{ body }}</p>
-        } @if (body && showInput) {
-        <div class="mt-3"></div>
-
-        } @if (showInput) {
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="inputValue"
-          [placeholder]="inputPlaceholder"
-          (keydown.enter)="onPrimaryClick()"
-        />
-        }
+        <ng-content select="[slot=body]">
+          @if (body) {
+          <p [ngClass]="'text-' + textColor">{{ body }}</p>
+          }
+        </ng-content>
+        
+        <ng-content select="[slot=form]">
+          @if (showInput) {
+          <div class="mt-3">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="inputValue"
+              [placeholder]="inputPlaceholder"
+              (keydown.enter)="onPrimaryClick()"
+            />
+          </div>
+          }
+        </ng-content>
+        
+        <!-- Default content slot -->
+        <ng-content></ng-content>
       </div>
 
       <div class="modal-footer">
-        @if (showSecButton) {
-        <button [ngClass]="'btn btn-outline-' + secBtnColor" (click)="onSecondaryClick()">
-          Avbryt
-        </button>
-        }
-        <button [ngClass]="'btn btn-outline-' + firstBtnColor" (click)="onPrimaryClick()">
-          OK
-        </button>
+        <ng-content select="[slot=footer]">
+          @if (showSecButton) {
+          <button [ngClass]="'btn btn-outline-' + secBtnColor" (click)="onSecondaryClick()">
+            {{ secondaryButtonText }}
+          </button>
+          }
+          <button [ngClass]="'btn btn-outline-' + firstBtnColor" (click)="onPrimaryClick()">
+            {{ primaryButtonText }}
+          </button>
+        </ng-content>
       </div>
     </div>
   </div>

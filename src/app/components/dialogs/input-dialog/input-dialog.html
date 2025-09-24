@@ -1,29 +1,23 @@
-<!-- <div class="dialog">
-      <h2>{{ data.title || 'Ny händelse' }}</h2>
-      <p *ngIf="data.message">{{ data.message }}</p>
-
-      <input
-        [(ngModel)]="value"
-        [placeholder]="data.placeholder || 'Titel'"
-        (keyup.enter)="ok()"
-        autofocus
-      />
-
-      <div class="actions">
-        <button type="button" (click)="ref.close(null)">Avbryt</button>
-        <button type="button" (click)="ok()">OK</button>
-      </div>
- -->
-
 <app-modal
-  [title]="data.title || 'Ny händelse'"
-  [body]="data.message || ''"
-  [showInput]="true"
-  [inputDefaultValue]="value"
   [primaryButtonText]="'OK'"
   [secondaryButtonText]="'Avbryt'"
-  (primaryAction)="ok($event)"
-  (secondaryAction)="close()"
   [showSecButton]="true"
   [firstBtnColor]="'success'"
-/>
+  (primaryAction)="ok(value)"
+  (secondaryAction)="close()"
+>
+  <h5 slot="header" class="text-dark">{{ data.title || 'Ny händelse' }}</h5>
+  <div slot="body">
+    @if (data.message) {
+    <p class="text-dark">{{ data.message }}</p>
+    }
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="value"
+      [placeholder]="data.placeholder || 'Titel'"
+      (keydown.enter)="ok(value)"
+      autofocus
+    />
+  </div>
+</app-modal>

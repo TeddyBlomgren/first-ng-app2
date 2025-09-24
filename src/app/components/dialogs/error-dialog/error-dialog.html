@@ -1,17 +1,8 @@
 <app-modal
-  [title]="data.title || 'Ett fel inträffade'"
-  [body]="data.message"
-  [showInput]="false"
   [primaryButtonText]="'OK'"
-  [secondaryButtonText]="''"
-  (primaryAction)="close()"
-  (secondaryAction)="close()"
-  [showSecButton]="false"
   [firstBtnColor]="'success'"
-  [titleColor]="'warning'"
-  [textColor]="'danger'"
+  (primaryAction)="close()"
 >
-  <form>
-    <input />
-  </form>
+  <h5 slot="header" class="text-warning">{{ data.title || 'Ett fel inträffade' }}</h5>
+  <p slot="body" class="text-danger">{{ data.message }}</p>
 </app-modal>
