@@ -33,22 +33,6 @@ export class CalendarComponent {
     return date.toLocaleDateString('sv-SE');
   }
 
-  private formatDateTime(date: Date | null): string {
-    return date
-      ? `${date.toLocaleDateString('sv-SE')} ${date.toLocaleTimeString('sv-SE', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        })}`
-      : '';
-  }
-
-  private refetchEvents(calendar: any): void {
-    if (calendar?.refetchEvents) {
-      calendar.refetchEvents();
-    }
-  }
-
   calendarOptions: CalendarOptions = {
     themeSystem: 'bootstrap5',
     weekNumbers: true,
@@ -221,5 +205,20 @@ export class CalendarComponent {
       ...this.calendarOptions,
       weekends: !this.calendarOptions.weekends,
     };
+  }
+  private formatDateTime(date: Date | null): string {
+    return date
+      ? `${date.toLocaleDateString('sv-SE')} ${date.toLocaleTimeString('sv-SE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })}`
+      : '';
+  }
+
+  private refetchEvents(calendar: any): void {
+    if (calendar?.refetchEvents) {
+      calendar.refetchEvents();
+    }
   }
 }
